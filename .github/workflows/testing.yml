@@ -12,7 +12,7 @@ on:
       - "README.md"
 
 jobs:
-  ci:
+  testing:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -20,7 +20,7 @@ jobs:
         os: [ubuntu-latest]
         php: [8.4]
 
-    name: Continuous integration PHP${{ matrix.php }} - ${{ matrix.os }}
+    name: Testing PHP${{ matrix.php }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
