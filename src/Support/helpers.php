@@ -1,5 +1,7 @@
 <?php
 
+use N1ebieski\KSEFClient\Support\Utility;
+
 if ( ! function_exists('value')) {
     /**
      * Return the default value of the given value.
@@ -13,7 +15,7 @@ if ( ! function_exists('value')) {
      */
     function value($value, ...$args)
     {
-        return $value instanceof Closure ? $value(...$args) : $value;
+        return Utility::value($value, ...$args);
     }
 }
 
@@ -25,7 +27,7 @@ if ( ! function_exists('var_path')) {
      */
     function var_path($path = ''): string
     {
-        return realpath(__DIR__ . '/../../var/' . $path);
+        return Utility::normalizePath(__DIR__ . '/../../var/' . $path);
     }
 }
 
@@ -37,7 +39,7 @@ if ( ! function_exists('config_path')) {
      */
     function config_path($path = ''): string
     {
-        return realpath(__DIR__ . '/../../config/' . $path);
+        return Utility::normalizePath(__DIR__ . '/../../config/' . $path);
     }
 }
 
@@ -49,6 +51,6 @@ if ( ! function_exists('base_path')) {
      */
     function base_path($path = ''): string
     {
-        return realpath(__DIR__ . '/../../' . $path);
+        return Utility::normalizePath(__DIR__ . '/../../' . $path);
     }
 }

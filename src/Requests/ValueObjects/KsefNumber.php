@@ -8,7 +8,7 @@ use N1ebieski\KSEFClient\Contracts\FromInterface;
 use N1ebieski\KSEFClient\Support\AbstractValueObject;
 use Stringable;
 
-final readonly class ReferenceNumber extends AbstractValueObject implements Stringable, FromInterface
+final readonly class KsefNumber extends AbstractValueObject implements Stringable, FromInterface
 {
     public function __construct(public string $value)
     {

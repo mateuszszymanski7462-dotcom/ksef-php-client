@@ -36,6 +36,18 @@ Main features:
         - [Token](#token)
             - [Redeem](#redeem)
             - [Refresh](#refresh)
+    - [Security](#security)
+        - [Public Key Certificates](#public-key-certificates)
+    - [Sessions](#sessions)
+        - [Invoices](#invoices)
+            - [Upo](#upo)
+            - [Ksef Upo](#ksef-upo)
+            - [Invoices Status](#invoices-status)
+        - [Online](#online)
+            - [Open](#open)
+            - [Close](#close)
+            - [Invoices](#invoices)
+        - [Sessions Status](#sessions-status)
     - [Certificates](#certificates)
         - [Limits](#limits)
         - [Enrollments](#enrollments)
@@ -272,6 +284,118 @@ https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Uzyskiwanie-dostepu/paths/~1a
 $response = $client->auth()->token()->refresh()->object();
 ```
 
+### Security
+
+#### Public Key Certificates
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego/paths/~1api~1v2~1security~1public-key-certificates/get
+
+```php
+$response = $client->security()->publicKeyCertificates();
+```
+
+### Sessions
+
+#### Invoices
+
+##### Upo
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Status-wysylki-i-UPO/paths/~1api~1v2~1sessions~1%7BreferenceNumber%7D~1invoices~1%7BinvoiceReferenceNumber%7D~1upo/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Invoices\Upo\UpoRequest;
+
+$response = $client->sessions()->invoices()->upo(
+    new UpoRequest(...)
+)->body();
+```
+
+##### Ksef Upo
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Status-wysylki-i-UPO/paths/~1api~1v2~1sessions~1%7BreferenceNumber%7D~1invoices~1ksef~1%7BksefNumber%7D~1upo/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Invoices\KsefUpo\KsefUpoRequest;
+
+$response = $client->sessions()->invoices()->ksefUpo(
+    new KsefUpoRequest(...)
+)->body();
+```
+
+##### Invoices Status
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Status-wysylki-i-UPO/paths/~1api~1v2~1sessions~1%7BreferenceNumber%7D~1invoices~1%7BinvoiceReferenceNumber%7D/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Invoices\Status\StatusRequest;
+
+$response = $client->sessions()->invoices()->status(
+    new StatusRequest(...)
+)->object();
+```
+
+#### Online
+
+##### Open
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-interaktywna/paths/~1api~1v2~1sessions~1online/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Online\Open\OpenRequest;
+
+$response = $client->sessions()->online()->open(
+    new OpenRequest(...)
+)->object();
+```
+
+##### Close
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-interaktywna/paths/~1api~1v2~1sessions~1online~1%7BreferenceNumber%7D~1close/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Online\Close\CloseRequest;
+
+$response = $client->sessions()->online()->close(
+    new CloseRequest(...)
+)->status();
+```
+
+##### Invoices
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-interaktywna/paths/~1api~1v2~1sessions~1online~1%7BreferenceNumber%7D~1invoices/post
+
+for DTO invoice:
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Online\Invoices\InvoicesRequest;
+
+$response = $client->sessions()->online()->invoices(
+    new InvoicesRequest(...)
+)->object();
+```
+
+for XML invoice:
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Online\Invoices\InvoicesXmlRequest;
+
+$response = $client->sessions()->online()->invoices(
+    new InvoicesXmlRequest(...)
+)->object();
+```
+
+#### Sessions Status
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Status-wysylki-i-UPO/paths/~1api~1v2~1sessions~1%7BreferenceNumber%7D/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Status\StatusRequest;
+
+$response = $client->sessions()->status(
+    new StatusRequest(...)
+)->object();
+```
+
 ### Certificates
 
 #### Limits
@@ -382,15 +506,15 @@ $response = $client->testdata()->person()->remove(
 
 ## Examples
 
-### Generate a KSEF certificate and save to .p12 file
+### Generate a KSEF certificate and convert to .p12 file
 
 ```php
 use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemAction;
 use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemHandler;
 use N1ebieski\KSEFClient\Actions\ConvertPemToDer\ConvertPemToDerAction;
 use N1ebieski\KSEFClient\Actions\ConvertPemToDer\ConvertPemToDerHandler;
-use N1ebieski\KSEFClient\Actions\SaveCertificateToPkcs12\SaveCertificateToPkcs12Action;
-use N1ebieski\KSEFClient\Actions\SaveCertificateToPkcs12\SaveCertificateToPkcs12Handler;
+use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Action;
+use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Handler;
 use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\DTOs\DN;
 use N1ebieski\KSEFClient\Factories\CSRFactory;
@@ -447,16 +571,92 @@ $certificateToPem = new ConvertDerToPemHandler()->handle(
     new ConvertDerToPemAction($certificate, 'CERTIFICATE')
 );
 
-$saveCertificateToPkcs12Action = new SaveCertificateToPkcs12Action(
-    certificate: new Certificate($certificateToPem, [], $csr->privateKey),
-    path: $_ENV['PATH_TO_KSEF_CERTIFICATE'], // .p12 file
-    passphrase: $_ENV['KSEF_CERTIFICATE_PASSPHRASE']
+$certificateToPkcs12 = new ConvertCertificateToPkcs12Handler()->handle(
+    new ConvertCertificateToPkcs12Action(
+        certificate: new Certificate($certificateToPem, [], $csr->privateKey),
+        passphrase: 'password'
+    )
 );
 
-new SaveCertificateToPkcs12Handler()->handle($saveCertificateToPkcs12Action);
+file_put_contents(config_path('certificates/ksef-certificate.p12'), $certificateToPkcs12);
 ```
 
 ### Send an invoice and check for UPO
+
+```php
+use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemAction;
+use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemHandler;
+use N1ebieski\KSEFClient\ClientBuilder;
+use N1ebieski\KSEFClient\Factories\EncryptedKeyFactory;
+use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
+use N1ebieski\KSEFClient\Support\Utility;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Invoices\FakturaSprzedazyTowaruInvoicesRequestFixture;
+use N1ebieski\KSEFClient\ValueObjects\KsefPublicKey;
+use N1ebieski\KSEFClient\ValueObjects\Mode;
+
+$encryptionKey = EncryptionKeyFactory::makeRandom();
+
+$client = new ClientBuilder()
+    ->withIdentifier('NIP_NUMBER')
+    ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
+    ->withEncryptionKey($encryptionKey)
+    ->build();
+
+$securityResponse = $client->security()->publicKeyCertificates();
+
+$symmetricKeyEncryptionCertificate = base64_decode(
+    $securityResponse->getSymmetricKeyEncryptionCertificate()
+);
+
+$certificate = new ConvertDerToPemHandler()->handle(new ConvertDerToPemAction(
+    der: $symmetricKeyEncryptionCertificate,
+    name: 'CERTIFICATE'
+));
+
+$ksefPublicKey = KsefPublicKey::from($certificate);
+$encryptedKey = EncryptedKeyFactory::make($encryptionKey, $ksefPublicKey);
+
+$openResponse = $client->sessions()->online()->open([
+    'formCode' => 'FA (3)',
+    'encryptedKey' => $encryptedKey
+])->object();
+
+$invoicesResponse = $client->sessions()->online()->invoices([
+    ...new FakturaSprzedazyTowaruInvoicesRequestFixture()
+        ->withTodayDate()
+        ->withRandomInvoiceNumber()
+        ->data,
+    'referenceNumber' => $openResponse->referenceNumber,
+])->object();
+
+$closeResponse = $client->sessions()->online()->close([
+    'referenceNumber' => $openResponse->referenceNumber
+]);
+
+$statusResponse = Utility::retry(function () use ($client, $openResponse, $invoicesResponse) {
+    $statusResponse = $client->sessions()->invoices()->status([
+        'referenceNumber' => $openResponse->referenceNumber,
+        'invoiceReferenceNumber' => $invoicesResponse->referenceNumber
+    ])->object();
+
+    if ($statusResponse->status->code === 200) {
+        return $statusResponse;
+    }
+
+    if ($statusResponse->status->code >= 400) {
+        throw new RuntimeException(
+            $statusResponse->status->description,
+            $statusResponse->status->code
+        );
+    }
+});
+
+$upo = $client->sessions()->invoices()->upo([
+    'referenceNumber' => $openResponse->referenceNumber,
+    'invoiceReferenceNumber' => $invoicesResponse->referenceNumber
+])->body();
+
+```
 
 ### Fetch invoices using encryption key
 

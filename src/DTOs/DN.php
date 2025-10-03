@@ -6,7 +6,6 @@ namespace N1ebieski\KSEFClient\DTOs;
 
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
-use N1ebieski\KSEFClient\ValueObjects\KSEFPublicKeyPath;
 use SensitiveParameter;
 
 final readonly class DN extends AbstractDTO
@@ -25,9 +24,9 @@ final readonly class DN extends AbstractDTO
         #[SensitiveParameter]
         public Optional | string | null $uniqueIdentifier = new Optional(),
         #[SensitiveParameter]
-        public Optional | KSEFPublicKeyPath | null $organizationName = new Optional(),
+        public Optional | string | null $organizationName = new Optional(),
         #[SensitiveParameter]
-        public Optional | KSEFPublicKeyPath | null $organizationIdentifier = new Optional(),
+        public Optional | string | null $organizationIdentifier = new Optional(),
     ) {
     }
 }

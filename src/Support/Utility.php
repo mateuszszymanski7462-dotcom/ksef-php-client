@@ -50,4 +50,39 @@ final class Utility
             'fileSize' => $fileSize,
         ];
     }
+
+    /**
+     * Get normalized path, like realpath() for non-existing path or file
+     */
+    public static function normalizePath(string $path): string
+    {
+        return array_reduce(explode('/', $path), function ($a, $b) {
+            if ($a === null) {
+                $a = "/";
+            }
+            if ($b === "" || $b === ".") {
+                return $a;
+            }
+            if ($b === "..") {
+                return dirname($a);
+            }
+
+            return preg_replace("/\/+/", "/", "$a/$b");
+        });
+    }
+
+    /**
+     * Return the default value of the given value.
+     *
+     * @template TValue
+     * @template TArgs
+     *
+     * @param TValue|Closure(TArgs):TValue $value
+     * @param  TArgs  ...$args
+     * @return TValue
+     */
+    public static function value($value, ...$args)
+    {
+        return $value instanceof Closure ? $value(...$args) : $value;
+    }
 }
