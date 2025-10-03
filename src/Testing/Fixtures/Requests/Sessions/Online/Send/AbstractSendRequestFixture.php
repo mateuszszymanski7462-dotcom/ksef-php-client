@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Invoices;
+namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send;
 
 use DateTimeImmutable;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\AbstractRequestFixture;
 
-abstract class AbstractInvoicesRequestFixture extends AbstractRequestFixture
+abstract class AbstractSendRequestFixture extends AbstractRequestFixture
 {
     public function withTodayDate(): self
     {

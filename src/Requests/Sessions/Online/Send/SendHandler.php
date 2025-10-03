@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace N1ebieski\KSEFClient\Requests\Sessions\Online\Invoices;
+namespace N1ebieski\KSEFClient\Requests\Sessions\Online\Send;
 
 use N1ebieski\KSEFClient\Actions\EncryptDocument\EncryptDocumentAction;
 use N1ebieski\KSEFClient\Actions\EncryptDocument\EncryptDocumentHandler;
@@ -15,7 +15,7 @@ use N1ebieski\KSEFClient\HttpClient\ValueObjects\Uri;
 use N1ebieski\KSEFClient\Requests\AbstractHandler;
 use RuntimeException;
 
-final readonly class InvoicesHandler extends AbstractHandler
+final readonly class SendHandler extends AbstractHandler
 {
     public function __construct(
         private HttpClientInterface $client,
@@ -24,7 +24,7 @@ final readonly class InvoicesHandler extends AbstractHandler
     ) {
     }
 
-    public function handle(InvoicesRequest | InvoicesXmlRequest $request): ResponseInterface
+    public function handle(SendRequest | SendXmlRequest $request): ResponseInterface
     {
         if ($this->config->encryptionKey === null) {
             throw new RuntimeException('Encryption key is required to send invoice.');

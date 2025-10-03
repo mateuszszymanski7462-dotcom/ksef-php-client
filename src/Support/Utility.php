@@ -52,6 +52,16 @@ final class Utility
     }
 
     /**
+     * Get the path to the base of the install.
+     *
+     * @param  string  $path
+     */
+    public static function basePath($path = ''): string
+    {
+        return Utility::normalizePath(__DIR__ . '/../../' . $path);
+    }
+
+    /**
      * Get normalized path, like realpath() for non-existing path or file
      */
     public static function normalizePath(string $path): string

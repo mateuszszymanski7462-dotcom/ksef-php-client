@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Invoices;
+namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send;
 
-final class FakturaZZalacznikiemInvoicesRequestFixture extends AbstractInvoicesRequestFixture
+final class SendFakturaZZalacznikiemRequestFixture extends AbstractSendRequestFixture
 {
     /**
      * @var array<string, mixed>

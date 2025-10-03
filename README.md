@@ -46,7 +46,7 @@ Main features:
         - [Online](#online)
             - [Open](#open)
             - [Close](#close)
-            - [Invoices](#invoices)
+            - [Invoices Send](#invoices-send)
         - [Sessions Status](#sessions-status)
     - [Certificates](#certificates)
         - [Limits](#limits)
@@ -62,7 +62,7 @@ Main features:
             - [Person Create](#person-create)
             - [Person Remove](#person-remove)
 - [Examples](#examples)
-    - [Generate a KSEF certificate and save to .p12 file](#generate-a-ksef-certificate-and-save-to-p12-file)
+    - [Generate a KSEF certificate and convert to .p12 file](#generate-a-ksef-certificate-and-convert-to-p12-file)
     - [Send an invoice and check for UPO](#send-an-invoice-and-check-for-upo)
     - [Fetch invoices using encryption key](#fetch-invoices-using-encryption-key)
 - [Testing](#testing)
@@ -360,17 +360,17 @@ $response = $client->sessions()->online()->close(
 )->status();
 ```
 
-##### Invoices
+##### Invoices send
 
 https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-interaktywna/paths/~1api~1v2~1sessions~1online~1%7BreferenceNumber%7D~1invoices/post
 
 for DTO invoice:
 
 ```php
-use N1ebieski\KSEFClient\Requests\Sessions\Online\Invoices\InvoicesRequest;
+use N1ebieski\KSEFClient\Requests\Sessions\Online\Send\SendRequest;
 
-$response = $client->sessions()->online()->invoices(
-    new InvoicesRequest(...)
+$response = $client->sessions()->online()->send(
+    new SendRequest(...)
 )->object();
 ```
 
@@ -578,7 +578,7 @@ $certificateToPkcs12 = new ConvertCertificateToPkcs12Handler()->handle(
     )
 );
 
-file_put_contents(config_path('certificates/ksef-certificate.p12'), $certificateToPkcs12);
+file_put_contents(Utility::basePath('config/certificates/ksef-certificate.p12'), $certificateToPkcs12);
 ```
 
 ### Send an invoice and check for UPO
@@ -590,7 +590,7 @@ use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\Factories\EncryptedKeyFactory;
 use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Invoices\FakturaSprzedazyTowaruInvoicesRequestFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendFakturaSprzedazyTowaruRequestFixture;
 use N1ebieski\KSEFClient\ValueObjects\KsefPublicKey;
 use N1ebieski\KSEFClient\ValueObjects\Mode;
 
@@ -621,8 +621,8 @@ $openResponse = $client->sessions()->online()->open([
     'encryptedKey' => $encryptedKey
 ])->object();
 
-$invoicesResponse = $client->sessions()->online()->invoices([
-    ...new FakturaSprzedazyTowaruInvoicesRequestFixture()
+$sendResponse = $client->sessions()->online()->send([
+    ...new SendFakturaSprzedazyTowaruRequestFixture()
         ->withTodayDate()
         ->withRandomInvoiceNumber()
         ->data,
@@ -633,10 +633,10 @@ $closeResponse = $client->sessions()->online()->close([
     'referenceNumber' => $openResponse->referenceNumber
 ]);
 
-$statusResponse = Utility::retry(function () use ($client, $openResponse, $invoicesResponse) {
+$statusResponse = Utility::retry(function () use ($client, $openResponse, $sendResponse) {
     $statusResponse = $client->sessions()->invoices()->status([
         'referenceNumber' => $openResponse->referenceNumber,
-        'invoiceReferenceNumber' => $invoicesResponse->referenceNumber
+        'invoiceReferenceNumber' => $sendResponse->referenceNumber
     ])->object();
 
     if ($statusResponse->status->code === 200) {
@@ -653,9 +653,8 @@ $statusResponse = Utility::retry(function () use ($client, $openResponse, $invoi
 
 $upo = $client->sessions()->invoices()->upo([
     'referenceNumber' => $openResponse->referenceNumber,
-    'invoiceReferenceNumber' => $invoicesResponse->referenceNumber
+    'invoiceReferenceNumber' => $sendResponse->referenceNumber
 ])->body();
-
 ```
 
 ### Fetch invoices using encryption key
