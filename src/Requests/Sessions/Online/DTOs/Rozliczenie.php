@@ -92,7 +92,7 @@ final readonly class Rozliczenie extends AbstractDTO implements DomSerializableI
             $rozliczenieGroup = $this->rozliczenieGroup->toDom()->documentElement;
 
             foreach ($rozliczenieGroup->childNodes as $child) {
-                $rozliczenieGroup->appendChild($dom->importNode($child, true));
+                $rozliczenie->appendChild($dom->importNode($child, true));
             }
         }
 

@@ -8,18 +8,19 @@ use N1ebieski\KSEFClient\Contracts\HttpClient\HttpClientInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\ClientResourceInterface;
 use N1ebieski\KSEFClient\DTOs\Config;
 use N1ebieski\KSEFClient\Exception\ExceptionHandler;
+use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
 use N1ebieski\KSEFClient\HttpClient\Response;
+use N1ebieski\KSEFClient\HttpClient\ValueObjects\BaseUri;
 use N1ebieski\KSEFClient\Resources\ClientResource;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\AbstractResponseFixture;
-use N1ebieski\KSEFClient\ValueObjects\EncryptionKey;
-use N1ebieski\KSEFClient\ValueObjects\KSEFPublicKeyPath;
+use N1ebieski\KSEFClient\ValueObjects\Mode;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 trait HasClientMock
 {
-    public function getClientStub(AbstractResponseFixture $response, ?EncryptionKey $encryptionKey = null): ClientResourceInterface
+    public function getClientStub(AbstractResponseFixture $response): ClientResourceInterface
     {
         /** @var TestCase $this */
         //@phpstan-ignore-next-line
@@ -34,8 +35,8 @@ trait HasClientMock
         $httpClientStub->method('sendRequest')->willReturn(new Response($responseStub, new ExceptionHandler()));
 
         return new ClientResource($httpClientStub, new Config(
-            ksefPublicKeyPath: KSEFPublicKeyPath::from(__DIR__ . '/../../../../config/keys/testPublicKey.pem'),
-            encryptionKey: $encryptionKey
+            baseUri: new BaseUri(Mode::Test->getApiUrl()->value),
+            encryptionKey: EncryptionKeyFactory::makeRandom()
         ));
     }
 }

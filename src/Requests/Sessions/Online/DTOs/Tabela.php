@@ -16,7 +16,7 @@ use N1ebieski\KSEFClient\Validator\Validator;
 final readonly class Tabela extends AbstractDTO implements DomSerializableInterface
 {
     /**
-     * @var array<int, TMetaDane>
+     * @var Optional|array<int, TMetaDane>
      */
     public Optional | array $tMetaDane;
 
@@ -27,7 +27,7 @@ final readonly class Tabela extends AbstractDTO implements DomSerializableInterf
 
     /**
      * @param TNaglowek $tNaglowek Nagłówek tabeli
-     * @param array<int, MetaDane> $tMetaDane Dane opisowe dotyczące tabeli
+     * @param Optional|array<int, TMetaDane> $tMetaDane Dane opisowe dotyczące tabeli
      * @param array<int, Wiersz> $wiersz Wiersze tabeli
      * @return void
      */

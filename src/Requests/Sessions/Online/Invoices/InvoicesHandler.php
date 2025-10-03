@@ -24,7 +24,7 @@ final readonly class InvoicesHandler extends AbstractHandler
     ) {
     }
 
-    public function handle(InvoicesRequest $request): ResponseInterface
+    public function handle(InvoicesRequest | InvoicesXmlRequest $request): ResponseInterface
     {
         if ($this->config->encryptionKey === null) {
             throw new RuntimeException('Encryption key is required to send invoice.');

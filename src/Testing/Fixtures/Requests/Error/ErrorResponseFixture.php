@@ -15,17 +15,20 @@ final class ErrorResponseFixture extends AbstractResponseFixture
      */
     public array $data = [
         'exception' => [
-            'serviceCtx' => 'srvDVAKA',
-            'serviceCode' => '20211001-EX-FFFFFFFFFF-FFFFFFFFFF-FF',
-            'serviceName' => 'online.session.authorisation.challenge',
-            'timestamp' => '2021-10-01T12:13:14.999Z',
-            'referenceNumber' => '20211001-SE-FFFFFFFFFF-FFFFFFFFFF-FF',
             'exceptionDetailList' => [
                 [
                     'exceptionCode' => 12345,
-                    'exceptionDescription' => 'Opis błędu.'
+                    'exceptionDescription' => 'Opis błędu.',
+                    'details' => [
+                        'Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona'
+                    ]
                 ]
-            ]
+            ],
+            'referenceNumber' => '20211001-SE-FFFFFFFFFF-FFFFFFFFFF-FF',
+            'serviceCode' => '20211001-EX-FFFFFFFFFF-FFFFFFFFFF-FF',
+            'serviceCtx' => 'srvDVAKA',
+            'serviceName' => 'online.session.authorisation.challenge',
+            'timestamp' => '2019-08-24T14:15:22Z'
         ]
     ];
 }

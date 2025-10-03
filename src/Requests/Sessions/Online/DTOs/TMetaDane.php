@@ -6,15 +6,15 @@ namespace N1ebieski\KSEFClient\Requests\Sessions\Online\DTOs;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\Requests\Sessions\Online\ValueObjects\ZKlucz;
-use N1ebieski\KSEFClient\Requests\Sessions\Online\ValueObjects\ZWartosc;
+use N1ebieski\KSEFClient\Requests\Sessions\Online\ValueObjects\TKlucz;
+use N1ebieski\KSEFClient\Requests\Sessions\Online\ValueObjects\TWartosc;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 
 final readonly class TMetaDane extends AbstractDTO implements DomSerializableInterface
 {
     public function __construct(
-        public ZKlucz $zKlucz,
-        public ZWartosc $zWartosc,
+        public TKlucz $tKlucz,
+        public TWartosc $tWartosc,
     ) {
     }
 
@@ -26,15 +26,15 @@ final readonly class TMetaDane extends AbstractDTO implements DomSerializableInt
         $tMetaDane = $dom->createElement('TMetaDane');
         $dom->appendChild($tMetaDane);
 
-        $zKlucz = $dom->createElement('ZKlucz');
-        $zKlucz->appendChild($dom->createTextNode((string) $this->zKlucz));
+        $tKlucz = $dom->createElement('TKlucz');
+        $tKlucz->appendChild($dom->createTextNode((string) $this->tKlucz));
 
-        $tMetaDane->appendChild($zKlucz);
+        $tMetaDane->appendChild($tKlucz);
 
-        $zWartosc = $dom->createElement('ZWartosc');
-        $zWartosc->appendChild($dom->createTextNode((string) $this->zWartosc));
+        $tWartosc = $dom->createElement('TWartosc');
+        $tWartosc->appendChild($dom->createTextNode((string) $this->tWartosc));
 
-        $tMetaDane->appendChild($zWartosc);
+        $tMetaDane->appendChild($tWartosc);
 
         return $dom;
     }

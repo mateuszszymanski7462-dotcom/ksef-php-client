@@ -83,7 +83,7 @@ use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
 $client = new ClientBuilder()
     ->withMode(Mode::Production) // Choice between: Test, Demo, Production
     ->withApiUrl($_ENV['KSEF_API_URL']) // Optional, default is set by Mode selection
-    ->withHttpClient(new \GuzzleHttp\Client([])) // Optional PSR-18 implementation, default is set by Psr18ClientDiscovery::find()
+    ->withHttpClient(new \GuzzleHttp\Client(...)) // Optional PSR-18 implementation, default is set by Psr18ClientDiscovery::find()
     ->withLogger(new \Monolog\Logger(...)) // Optional PSR-3 implementation, default is set by PsrDiscovery\Discover::log()
     ->withLogPath($_ENV['PATH_TO_LOG_FILE'], $_ENV['LOG_LEVEL']) // Optional, level: null disables logging
     ->withAccessToken($_ENV['ACCESS_TOKEN']) // Optional, if present, auto authorization is skipped
@@ -301,7 +301,7 @@ use N1ebieski\KSEFClient\Requests\Certificates\Enrollments\Send\SendRequest;
 
 $response = $client->certificates()->enrollments()->send(
     new SendRequest(...)
-);
+)->object();
 ```
 
 ##### Enrollments Status
@@ -313,7 +313,7 @@ use N1ebieski\KSEFClient\Requests\Certificates\Enrollments\Status\StatusRequest;
 
 $response = $client->certificates()->enrollments()->status(
     new StatusRequest(...)
-);
+)->object();
 ```
 
 #### Certificates Retrieve
@@ -325,7 +325,7 @@ use N1ebieski\KSEFClient\Requests\Certificates\Retrieve\RetrieveRequest;
 
 $response = $client->certificates()->retrieve(
     new RetrieveRequest(...)
-);
+)->object();
 ```
 
 #### Certificates Revoke
@@ -337,7 +337,7 @@ use N1ebieski\KSEFClient\Requests\Certificates\Revoke\RevokeRequest;
 
 $response = $client->certificates()->revoke(
     new RevokeRequest(...)
-);
+)->status();
 ```
 
 #### Certificates Query
@@ -349,7 +349,7 @@ use N1ebieski\KSEFClient\Requests\Certificates\Query\QueryRequest;
 
 $response = $client->certificates()->query(
     new QueryRequest(...)
-);
+)->object();
 ```
 
 ### Testdata
@@ -365,7 +365,7 @@ use N1ebieski\KSEFClient\Requests\Testdata\Person\Create\CreateRequest;
 
 $response = $client->testdata()->person()->create(
     new CreateRequest(...)
-);
+)->status();
 ```
 
 ##### Person Remove
@@ -377,7 +377,7 @@ use N1ebieski\KSEFClient\Requests\Testdata\Person\Remove\RemoveRequest;
 
 $response = $client->testdata()->person()->remove(
     new RemoveRequest(...)
-);
+)->status();
 ```
 
 ## Examples
@@ -401,7 +401,7 @@ use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 
 $client = new ClientBuilder()
     ->withIdentifier('NIP_NUMBER')
-    // To generate the KSEF certificate, we must authorize the qualified certificate the first time
+    // To generate the KSEF certificate, you must authorize the qualified certificate the first time
     ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
     ->build();
 
@@ -444,7 +444,7 @@ $retrieveResponse = $client->certificates()->retrieve([
 $certificate = base64_decode($retrieveResponse->certificates[0]->certificate);
 
 $certificateToPem = new ConvertDerToPemHandler()->handle(
-    new ConvertDerToPemAction($certificate, 'KSEF CERTIFICATE')
+    new ConvertDerToPemAction($certificate, 'CERTIFICATE')
 );
 
 $saveCertificateToPkcs12Action = new SaveCertificateToPkcs12Action(

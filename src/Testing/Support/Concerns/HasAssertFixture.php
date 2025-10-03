@@ -67,9 +67,9 @@ trait HasAssertFixture
     {
         $this->expectExceptionObject(new BadRequestException(
             //@phpstan-ignore-next-line
-            message: $data['exception']['exceptionDetailList'][0]['exceptionDescription'],
+            message: "{$data['exception']['exceptionDetailList'][0]['exceptionCode']} {$data['exception']['exceptionDetailList'][0]['exceptionDescription']}",
             //@phpstan-ignore-next-line
-            code: $data['exception']['exceptionDetailList'][0]['exceptionCode'],
+            code: 400,
             context: (object) $data
         ));
     }

@@ -17,8 +17,8 @@ final class InvoicesResource extends AbstractResource implements InvoicesResourc
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private Config $config,
-        private ?LoggerInterface $logger = null
+        private readonly Config $config,
+        private readonly ?LoggerInterface $logger = null
     ) {
     }
 

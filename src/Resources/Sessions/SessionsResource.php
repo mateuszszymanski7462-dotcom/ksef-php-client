@@ -21,8 +21,8 @@ final class SessionsResource extends AbstractResource implements SessionsResourc
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private Config $config,
-        private ?LoggerInterface $logger = null
+        private readonly Config $config,
+        private readonly ?LoggerInterface $logger = null
     ) {
     }
 

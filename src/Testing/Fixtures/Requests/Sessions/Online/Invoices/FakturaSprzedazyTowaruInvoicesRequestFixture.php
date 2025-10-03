@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Online\Invoice\Send;
+namespace N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Invoices;
 
-final class SendFakturaSprzedazyTowaruRequestFixture extends AbstractSendRequestFixture
+final class FakturaSprzedazyTowaruInvoicesRequestFixture extends AbstractInvoicesRequestFixture
 {
     /**
      * @var array<string, mixed>
      */
     public array $data = [
+        'referenceNumber' => '20250625-EE-319D7EE000-B67F415CDC-2C',
         'faktura' => [
             'naglowek' => [
                 'wariantFormularza' => 'FA (3)',

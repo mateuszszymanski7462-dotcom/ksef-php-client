@@ -16,12 +16,12 @@ use N1ebieski\KSEFClient\Validator\Validator;
 final readonly class BlokDanych extends AbstractDTO implements DomSerializableInterface
 {
     /**
-     * @var array<int, Informacje>
+     * @var array<int, MetaDane>
      */
     public array $metaDane;
 
     /**
-     * @var array<int, Tabela>
+     * @var Optional|array<int, Tabela>
      */
     public Optional | array $tabela;
 
