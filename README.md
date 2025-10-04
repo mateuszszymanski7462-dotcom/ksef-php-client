@@ -776,9 +776,9 @@ $upo = $client->sessions()->invoices()->upo([
 
 The package uses unit tests via [PHPUnit](https://github.com/sebastianbergmann/phpunit). 
 
-TestCase is located in the location of ```src/Testing/AbstractTestCase```
+TestCase is located in ```src/Testing/AbstractTestCase```
 
-Fake request and responses fixtures for resources are located in the location of ```src/Testing/Fixtures/Requests```
+Fake request and responses fixtures for resources are located in ```src/Testing/Fixtures/Requests```
 
 Run all tests:
 
