@@ -130,7 +130,10 @@ $authorisationStatusResponse = $client->auth()->status([
 
 ## Authorization
 
-### Auto authorization via KSEF Token
+<details open>
+    <summary>
+        <h3>Auto authorization via KSEF Token</h3>
+    </summary>
 
 ```php
 use N1ebieski\KSEFClient\ClientBuilder;
@@ -142,8 +145,12 @@ $client = new ClientBuilder()
 
 // Do something with the available resources
 ```
+</details>
 
-### Auto authorization via certificate .p12
+<details>
+    <summary>
+        <h3>Auto authorization via certificate .p12</h3>
+    </summary>
 
 ```php
 use N1ebieski\KSEFClient\ClientBuilder;
@@ -155,8 +162,12 @@ $client = new ClientBuilder()
 
 // Do something with the available resources
 ```
+</details>
 
-### Manual authorization
+<details>
+    <summary>
+        <h3>Manual authorization</h3>
+    </summary>
 
 ```php
 use N1ebieski\KSEFClient\ClientBuilder;
@@ -219,20 +230,28 @@ $client = $client
 
 // Do something with the available resources
 ```
+</details>
 
 ## Resources
 
 ### Auth
 
-#### Challenge
+<details>
+    <summary>
+        <h4>Challenge</h4>
+    </summary>
 
 https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Uzyskiwanie-dostepu/paths/~1api~1v2~1auth~1challenge/post
 
 ```php
 $response = $client->auth()->challenge()->object();
 ```
+</details>
 
-#### Xades Signature
+<details>
+    <summary>
+        <h4>Xades Signature</h4>
+    </summary>
 
 https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Uzyskiwanie-dostepu/paths/~1api~1v2~1auth~1xades-signature/post
 
@@ -253,6 +272,7 @@ $response = $client->auth()->xadesSignature(
     new XadesSignatureXmlRequest(...)
 )->object();
 ```
+</details>
 
 #### Auth Status
 
