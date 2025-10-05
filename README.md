@@ -10,9 +10,10 @@ PHP API client that allows you to interact with the [Krajowy System e-Faktur KSE
 Main features:
 
 - Support for authorization via qualified certificates, KSEF certificates, KSEF tokens, and trusted signature ePUAP (manual)
-- Handling of CSR certification requests
-- Automatic access token refresh
 - Logical invoice structure mapped to DTOs/ValueObjects
+- Automatic access token refresh
+- Handling of CSR certification requests
+- Generating QR codes
 
 |  KSEF Version  | Branch Version |
 |:--------------:|:--------------:|
