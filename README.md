@@ -843,6 +843,7 @@ file_put_contents(Utility::basePath('config/certificates/ksef-certificate.p12'),
 
 ```php
 use Endroid\QrCode\Builder\Builder as QrCodeBuilder;
+use Endroid\QrCode\Label\Font\OpenSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemAction;
@@ -925,7 +926,10 @@ $upo = $client->sessions()->invoices()->upo([
 $faktura = Faktura::from($fixture->getFaktura());
 
 $generateQRCodesHandler = new GenerateQRCodesHandler(
-    qrCodeBuilder: new QrCodeBuilder(roundBlockSizeMode: RoundBlockSizeMode::Enlarge),
+    qrCodeBuilder: new QrCodeBuilder(
+        roundBlockSizeMode: RoundBlockSizeMode::Enlarge,
+        labelFont: new OpenSans(size: 12)
+    ),
     convertEcdsaDerToRawHandler: new ConvertEcdsaDerToRawHandler()
 );
 
@@ -934,6 +938,7 @@ $qrCodes = $generateQRCodesHandler->handle(GenerateQRCodesAction::from([
     'nip' => $faktura->podmiot1->daneIdentyfikacyjne->nip,
     'invoiceCreatedAt' => $faktura->fa->p_1->value,
     'document' => $faktura->toXml(),    
+    'ksefNumber' => $statusResponse->ksefNumber
 ]));
 
 // Invoice link
@@ -948,6 +953,7 @@ file_put_contents(Utility::basePath("var/qr/code1.png"), $qrCodes->code1);
 
 ```php
 use Endroid\QrCode\Builder\Builder as QrCodeBuilder;
+use Endroid\QrCode\Label\Font\OpenSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use N1ebieski\KSEFClient\Actions\ConvertEcdsaDerToRaw\ConvertEcdsaDerToRawHandler;
 use N1ebieski\KSEFClient\Actions\GenerateQRCodes\GenerateQRCodesAction;
@@ -974,7 +980,10 @@ $fixture = new SendFakturaSprzedazyTowaruRequestFixture()
 $faktura = Faktura::from($fixture->getFaktura());
 
 $generateQRCodesHandler = new GenerateQRCodesHandler(
-    qrCodeBuilder: new QrCodeBuilder(roundBlockSizeMode: RoundBlockSizeMode::Enlarge),
+    qrCodeBuilder: new QrCodeBuilder(
+        roundBlockSizeMode: RoundBlockSizeMode::Enlarge,
+        labelFont: new OpenSans(size: 12)
+    ),
     convertEcdsaDerToRawHandler: new ConvertEcdsaDerToRawHandler()
 );
 
