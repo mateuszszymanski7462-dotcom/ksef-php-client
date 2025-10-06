@@ -52,6 +52,11 @@ Main features:
         - [Sessions Status](#sessions-status)
     - [Invoices]
         - [Invoices Download](#invoices-download)
+        - [Query](#query)
+            - [Query Metadata](#query-metadata)
+        - [Exports](#exports)
+            - [Exports Init](#exports-init)
+            - [Exposts Status](#exports-status)
     - [Certificates](#certificates)
         - [Limits](#limits)
         - [Enrollments](#enrollments)
@@ -501,6 +506,40 @@ $response = $client->invoices()->query()->metadata(
 ```
 </details>
 
+#### Exports
+
+<details>
+    <summary>
+        <h5>Exports Init</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Pobieranie-faktur/paths/~1api~1v2~1invoices~1exports/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Invoices\Exports\Init\InitRequest;
+
+$response = $client->invoices()->exports()->init(
+    new InitRequest(...)
+)->object();
+```
+</details>
+
+<details>
+    <summary>
+        <h5>Exports Status</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Pobieranie-faktur/paths/~1api~1v2~1invoices~1exports~1%7BoperationReferenceNumber%7D/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Invoices\Exports\Status\StatusRequest;
+
+$response = $client->invoices()->exports()->status(
+    new StatusRequest(...)
+)->object();
+```
+</details>
+
 ### Certificates
 
 <details>
@@ -647,7 +686,7 @@ $response = $client->testdata()->person()->remove(
 
 ## Examples
 
-<details open>
+<details>
     <summary>
         <h3>Generate a KSEF certificate and convert to .p12 file</h3>
     </summary>
@@ -893,8 +932,88 @@ file_put_contents(Utility::basePath("var/qr/code2.png"), $qrCodes->code2);
 
 <details>
     <summary>
-        <h3>Fetch invoices using encryption key</h3>
+        <h3>Download and decrypt invoices using the encryption key</h3>
     </summary>
+
+```php
+use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemAction;
+use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemHandler;
+use N1ebieski\KSEFClient\Actions\DecryptDocument\DecryptDocumentAction;
+use N1ebieski\KSEFClient\Actions\DecryptDocument\DecryptDocumentHandler;
+use N1ebieski\KSEFClient\ClientBuilder;
+use N1ebieski\KSEFClient\Factories\EncryptedKeyFactory;
+use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
+use N1ebieski\KSEFClient\Support\Utility;
+use N1ebieski\KSEFClient\ValueObjects\KsefPublicKey;
+use N1ebieski\KSEFClient\ValueObjects\Mode;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Security\PublicKeyCertificates\PublicKeyCertificateUsage;
+
+$encryptionKey = EncryptionKeyFactory::makeRandom();
+
+$client = new ClientBuilder()
+    ->withIdentifier($_ENV['NIP_NUMBER'])
+    ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
+    ->build();
+
+$securityResponse = $client->security()->publicKeyCertificates();
+
+$symmetricKeyEncryptionCertificate = base64_decode(
+    $securityResponse->getFirstByPublicKeyCertificateUsage(PublicKeyCertificateUsage::SymmetricKeyEncryption)
+);
+
+$certificate = new ConvertDerToPemHandler()->handle(new ConvertDerToPemAction(
+    der: $symmetricKeyEncryptionCertificate,
+    name: 'CERTIFICATE'
+));
+
+$ksefPublicKey = KsefPublicKey::from($certificate);
+$encryptedKey = EncryptedKeyFactory::make($encryptionKey, $ksefPublicKey);
+
+$initResponse = $client->invoices()->exports()->init([
+    'encryptedKey' => $encryptedKey,
+    'filters' => [
+        'subjectType' => 'Subject1',
+        'dateRange' => [
+            'dateType' => 'Invoicing',
+            'from' => new DateTimeImmutable('-1 day'),
+            'to' => new DateTimeImmutable()
+        ],
+    ]
+])->object();
+
+$statusResponse = Utility::retry(function () use ($client, $initResponse) {
+    $statusResponse = $client->invoices()->exports()->status([
+        'operationReferenceNumber' => $initResponse->operationReferenceNumber
+    ])->object();
+
+    if ($statusResponse->status->code === 200) {
+        return $statusResponse;
+    }
+
+    if ($statusResponse->status->code >= 400) {
+        throw new RuntimeException(
+            $statusResponse->status->description,
+            $statusResponse->status->code
+        );
+    }
+});
+
+$decryptDocumentHandler = new DecryptDocumentHandler();
+
+// Downloading...
+foreach ($statusResponse->package->parts as $part) {
+    $contents = file_get_contents($part->url);
+
+    $contents = $decryptDocumentHandler->handle(new DecryptDocumentAction(
+        document: $contents,
+        encryptionKey: $encryptionKey
+    ));
+
+    $name = rtrim($part->partName, '.aes');
+
+    file_put_contents(Utility::basePath("var/zip/{$name}"), $contents);
+}
+```
 </details>
 
 ## Testing

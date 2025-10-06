@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 use function N1ebieski\KSEFClient\Tests\getClientStub;
-use N1ebieski\KSEFClient\Requests\Invoices\Query\Metadata\MetadataRequest;
+use N1ebieski\KSEFClient\Requests\Invoices\Exports\Status\StatusRequest;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Error\ErrorResponseFixture;
-use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Invoices\Query\Metadata\MetadataRequestFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Invoices\Exports\Status\StatusRequestFixture;
 
-use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Invoices\Query\Metadata\MetadataResponseFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Invoices\Exports\Status\StatusResponseFixture;
 
 /**
- * @return array<string, array{MetadataRequestFixture, MetadataResponseFixture}>
+ * @return array<string, array{StatusRequestFixture, StatusResponseFixture}>
  */
 dataset('validResponseProvider', function () {
     $requests = [
-        new MetadataRequestFixture(),
+        new StatusRequestFixture(),
     ];
 
     $responses = [
-        new MetadataResponseFixture(),
+        new StatusResponseFixture(),
     ];
 
     $combinations = [];
@@ -29,18 +29,18 @@ dataset('validResponseProvider', function () {
         }
     }
 
-    /** @var array<string, array{MetadataRequestFixture, MetadataResponseFixture}> */
+    /** @var array<string, array{StatusRequestFixture, StatusResponseFixture}> */
     return $combinations;
 });
 
-test('valid response', function (MetadataRequestFixture $requestFixture, MetadataResponseFixture $responseFixture) {
+test('valid response', function (StatusRequestFixture $requestFixture, StatusResponseFixture $responseFixture) {
     $clientStub = getClientStub($responseFixture);
 
-    $request = MetadataRequest::from($requestFixture->data);
+    $request = StatusRequest::from($requestFixture->data);
 
     expect($request)->toBeFixture($requestFixture->data);
 
-    $response = $clientStub->invoices()->query()->metadata($requestFixture->data)->object();
+    $response = $clientStub->invoices()->exports()->status($requestFixture->data)->object();
 
     expect($response)->toBeFixture($responseFixture->data);
 })->with('validResponseProvider');
@@ -49,10 +49,10 @@ test('invalid response', function () {
     $responseFixture = new ErrorResponseFixture();
 
     expect(function () use ($responseFixture) {
-        $requestFixture = new MetadataRequestFixture();
+        $requestFixture = new StatusRequestFixture();
 
         $clientStub = getClientStub($responseFixture);
 
-        $clientStub->invoices()->query()->metadata($requestFixture->data);
+        $clientStub->invoices()->exports()->status($requestFixture->data);
     })->toBeExceptionFixture($responseFixture->data);
 });
