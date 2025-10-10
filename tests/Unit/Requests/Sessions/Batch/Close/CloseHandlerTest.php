@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+use N1ebieski\KSEFClient\Requests\Sessions\Batch\Close\CloseRequest;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Error\ErrorResponseFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Batch\Close\CloseRequestFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Batch\Close\CloseResponseFixture;
+
+use function N1ebieski\KSEFClient\Tests\getClientStub;
+
+/**
+ * @return array<string, array{CloseRequestFixture, CloseResponseFixture}>
+ */
+dataset('validResponseProvider', function (): array {
+    $requests = [
+        new CloseRequestFixture(),
+    ];
+
+    $responses = [
+        new CloseResponseFixture(),
+    ];
+
+    $combinations = [];
+
+    foreach ($requests as $request) {
+        foreach ($responses as $response) {
+            $combinations["{$request->name}, {$response->name}"] = [$request, $response];
+        }
+    }
+
+    /** @var array<string, array{CloseRequestFixture, CloseResponseFixture}> */
+    return $combinations;
+});
+
+test('valid response', function (CloseRequestFixture $requestFixture, CloseResponseFixture $responseFixture): void {
+    $clientStub = getClientStub($responseFixture);
+
+    $request = CloseRequest::from($requestFixture->data);
+
+    expect($request)->toBeFixture($requestFixture->data);
+
+    $response = $clientStub->sessions()->batch()->close($requestFixture->data)->status();
+
+    expect($response)->toEqual($responseFixture->statusCode);
+})->with('validResponseProvider');
+
+test('invalid response', function (): void {
+    $responseFixture = new ErrorResponseFixture();
+
+    expect(function () use ($responseFixture): void {
+        $requestFixture = new CloseRequestFixture();
+
+        $clientStub = getClientStub($responseFixture);
+
+        $clientStub->sessions()->batch()->close($requestFixture->data);
+    })->toBeExceptionFixture($responseFixture->data);
+});

@@ -27,7 +27,7 @@ final class Uri extends AbstractValueObject implements ValueAwareInterface, Stri
 
     public function withParameters(string $parameters): self
     {
-        return new self($this->value . '?' . $parameters);
+        return new self($this->value . $parameters);
     }
 
     public function withBaseUrl(BaseUri $baseUri): self

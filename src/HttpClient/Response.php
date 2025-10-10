@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace N1ebieski\KSEFClient\HttpClient;
 
+use JsonException;
 use N1ebieski\KSEFClient\Contracts\Exception\ExceptionHandlerInterface;
 use N1ebieski\KSEFClient\Contracts\HttpClient\ResponseInterface;
 use N1ebieski\KSEFClient\Factories\ExceptionFactory;
@@ -33,7 +34,11 @@ final class Response implements ResponseInterface
             return;
         }
 
-        $exceptionResponse = $this->contents === '' ? null : $this->object();
+        try {
+            $exceptionResponse = $this->contents === '' ? null : $this->object();
+        } catch (JsonException) {
+            $exceptionResponse = null;
+        }
 
         $this->exceptionHandler->handle(
             //@phpstan-ignore-next-line

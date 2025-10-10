@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
+
+use DOMDocument;
+use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\OpisPlatnosci;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\PlatnoscInna;
+use N1ebieski\KSEFClient\Support\AbstractDTO;
+
+final class PlatnoscInnaGroup extends AbstractDTO implements DomSerializableInterface
+{
+    /**
+     * @param PlatnoscInna $platnoscInna Znacznik innej formy płatności: 1 - inna forma płatności
+     * @param OpisPlatnosci $opisPlatnosci Opis płatnosci Doprecyzowanie innej formy płatności
+     * @return void
+     */
+    public function __construct(
+        public readonly OpisPlatnosci $opisPlatnosci,
+        public readonly PlatnoscInna $platnoscInna = PlatnoscInna::Default,
+    ) {
+    }
+
+    public function toDom(): DOMDocument
+    {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->formatOutput = true;
+
+        $platnoscInnaGroup = $dom->createElement('PlatnoscInnaGroup');
+        $dom->appendChild($platnoscInnaGroup);
+
+        $platnoscInna = $dom->createElement('PlatnoscInna');
+        $platnoscInna->appendChild($dom->createTextNode((string) $this->platnoscInna->value));
+
+        $platnoscInnaGroup->appendChild($platnoscInna);
+
+        $opisPlatnosci = $dom->createElement('OpisPlatnosci');
+        $opisPlatnosci->appendChild($dom->createTextNode((string) $this->opisPlatnosci));
+
+        $platnoscInnaGroup->appendChild($opisPlatnosci);
+
+        return $dom;
+    }
+}

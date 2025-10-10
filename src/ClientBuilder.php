@@ -10,11 +10,13 @@ use Http\Discovery\Psr18ClientDiscovery;
 use InvalidArgumentException;
 use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemAction;
 use N1ebieski\KSEFClient\Actions\ConvertDerToPem\ConvertDerToPemHandler;
+use N1ebieski\KSEFClient\Contracts\HttpClient\ClientInterface;
 use N1ebieski\KSEFClient\Contracts\HttpClient\ResponseInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\ClientResourceInterface;
 use N1ebieski\KSEFClient\DTOs\Config;
 use N1ebieski\KSEFClient\DTOs\Requests\Auth\ContextIdentifierGroup;
 use N1ebieski\KSEFClient\DTOs\Requests\Auth\XadesSignature;
+use N1ebieski\KSEFClient\Factories\ClientFactory;
 use N1ebieski\KSEFClient\Factories\EncryptedKeyFactory;
 use N1ebieski\KSEFClient\Factories\EncryptedTokenFactory;
 use N1ebieski\KSEFClient\Factories\LoggerFactory;
@@ -44,7 +46,7 @@ use N1ebieski\KSEFClient\ValueObjects\Requests\Auth\SubjectIdentifierType;
 use N1ebieski\KSEFClient\ValueObjects\Requests\ReferenceNumber;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Security\PublicKeyCertificates\PublicKeyCertificateUsage;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\EncryptedKey;
-use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\ClientInterface as BaseClientInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
@@ -73,9 +75,11 @@ final class ClientBuilder
 
     private Optional | bool $verifyCertificateChain;
 
+    private int $asyncMaxConcurrency = 8;
+
     public function __construct()
     {
-        $this->httpClient = Psr18ClientDiscovery::find();
+        $this->httpClient = ClientFactory::make(Psr18ClientDiscovery::find());
         $this->logger = LoggerFactory::make();
         $this->apiUrl = $this->mode->getApiUrl();
         $this->verifyCertificateChain = new Optional();
@@ -181,9 +185,9 @@ final class ClientBuilder
         return $this;
     }
 
-    public function withHttpClient(ClientInterface $client): self
+    public function withHttpClient(BaseClientInterface $client): self
     {
-        $this->httpClient = $client;
+        $this->httpClient = ClientFactory::make($client);
 
         return $this;
     }
@@ -213,6 +217,13 @@ final class ClientBuilder
         return $this;
     }
 
+    public function withAsyncMaxConcurrency(int $asyncMaxConcurrency): self
+    {
+        $this->asyncMaxConcurrency = $asyncMaxConcurrency;
+
+        return $this;
+    }
+
     /**
      * @param null|LogLevel::* $level
      */
@@ -235,6 +246,7 @@ final class ClientBuilder
     {
         $config = new Config(
             baseUri: new BaseUri($this->apiUrl->value),
+            asyncMaxConcurrency: $this->asyncMaxConcurrency,
             accessToken: $this->accessToken,
             refreshToken: $this->refreshToken,
             encryptionKey: $this->encryptionKey,

@@ -10,7 +10,8 @@ PHP API client that allows you to interact with the [KSEF API](https://ksef-test
 Main features:
 
 - Support for authorization using qualified certificates, KSeF certificates, KSeF tokens, and trusted ePUAP signatures (manual mode)
-- Logical invoice structure mapped to DTOs and Value Objects
+- Support for async batch send multiple invoices
+- Logical invoice structure mapped to DTOs and ValueObjects
 - Automatic access token refresh
 - CSR (Certificate Signing Request) handling
 - KSeF exception handling
@@ -49,6 +50,9 @@ Main features:
             - [Open](#open)
             - [Close](#close)
             - [Invoices Send](#invoices-send)
+        - [Batch](#batch)
+            - [Batch open (and batch send multiple invoices)](#batch-open-and-batch-send-multiple-invoices)
+            - [Batch close](#batch-close)
         - [Sessions Status](#sessions-status)
     - [Invoices](#invoices)
         - [Invoices Download](#invoices-download)
@@ -78,6 +82,7 @@ Main features:
 - [Examples](#examples)
     - [Generate a KSEF certificate and convert to .p12 file](#generate-a-ksef-certificate-and-convert-to-p12-file)
     - [Send an invoice, check for UPO and generate QR code](#send-an-invoice-check-for-upo-and-generate-qr-code)
+    - [Batch async send multiple invoices and check for UPO](#batch-async-send-multiple-invoices-and-check-for-upo)
     - [Create an offline invoice and generate both QR codes](#create-an-offline-invoice-and-generate-both-qr-codes)
     - [Download and decrypt invoices using the encryption key](#download-and-decrypt-invoices-using-the-encryption-key)
 - [Testing](#testing)
@@ -120,6 +125,7 @@ $client = (new ClientBuilder())
     ->withVerifyCertificateChain(true) // Optional. Explanation https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Uzyskiwanie-dostepu/paths/~1api~1v2~1auth~1xades-signature/post
     ->withEncryptionKey(EncryptionKeyFactory::makeRandom()) // Required for invoice resources. Remember to save this value!
     ->withIdentifier('NIP_NUMBER') // Required for authorization. Optional otherwise
+    ->withAsyncMaxConcurrency(8) // Optional. Maximum concurrent send operations during asynchronous sending
     ->build();
 ```
 
@@ -457,6 +463,62 @@ use N1ebieski\KSEFClient\Requests\Sessions\Online\Send\SendXmlRequest;
 $response = $client->sessions()->online()->send(
     new SendXmlRequest(...)
 )->object();
+```
+</details>
+
+#### Batch
+
+<details>
+    <summary>
+        <h5>Batch open (and batch send multiple invoices)</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-wsadowa/paths/~1api~1v2~1sessions~1batch/post
+
+for DTOs invoices:
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Batch\OpenAndSend\OpenAndSendRequest;
+
+$response = $client->sessions()->batch()->openAndSend(
+    new OpenAndSendRequest(...)
+)->object();
+```
+
+for XMLs invoices:
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Batch\OpenAndSend\OpenAndSendXmlRequest;
+
+$response = $client->sessions()->batch()->openAndSend(
+    new OpenAndSendXmlRequest(...)
+)->object();
+```
+
+for ZIP invoices:
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Batch\OpenAndSend\OpenAndSendZipRequest;
+
+$response = $client->sessions()->batch()->openAndSend(
+    new OpenAndSendZipRequest(...)
+)->object();
+```
+</details>
+
+<details>
+    <summary>
+        <h5>Batch Close</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wysylka-wsadowa/paths/~1api~1v2~1sessions~1batch~1%7BreferenceNumber%7D~1close/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Sessions\Batch\Close\CloseRequest;
+
+$response = $client->sessions()->batch()->close(
+    new CloseRequest(...)
+)->status();
 ```
 </details>
 
@@ -856,10 +918,11 @@ use N1ebieski\KSEFClient\Actions\GenerateQRCodes\GenerateQRCodesAction;
 use N1ebieski\KSEFClient\Actions\GenerateQRCodes\GenerateQRCodesHandler;
 use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\DTOs\QRCodes;
-use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Online\Faktura;
+use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Faktura;
 use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendFakturaSprzedazyTowaruRequestFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaSprzedazyTowaruFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendRequestFixture;
 use N1ebieski\KSEFClient\ValueObjects\Mode;
 
 $encryptionKey = EncryptionKeyFactory::makeRandom();
@@ -875,10 +938,12 @@ $openResponse = $client->sessions()->online()->open([
     'formCode' => 'FA (3)',
 ])->object();
 
-$fixture = (new SendFakturaSprzedazyTowaruRequestFixture())
-    ->withTodayDate()
-    ->withRandomInvoiceNumber();
+$fakturaFixture = (new FakturaSprzedazyTowaruFixture())->withRandomInvoiceNumber()->withTodayDate();
 
+$fixture = (new SendRequestFixture())->withFakturaFixture($fakturaFixture);
+
+// For sending invoice as DTO use SendRequest DTO or array
+// For sending invoice as XML use SendXmlRequest DTO
 $sendResponse = $client->sessions()->online()->send([
     ...$fixture->data,
     'referenceNumber' => $openResponse->referenceNumber,
@@ -911,7 +976,7 @@ $upo = $client->sessions()->invoices()->upo([
     'invoiceReferenceNumber' => $sendResponse->referenceNumber
 ])->body();
 
-$faktura = Faktura::from($fixture->getFaktura());
+$faktura = Faktura::from($fakturaFixture->data);
 
 $generateQRCodesHandler = new GenerateQRCodesHandler(
     qrCodeBuilder: (new QrCodeBuilder())
@@ -935,6 +1000,71 @@ file_put_contents(Utility::basePath("var/qr/code1.png"), $qrCodes->code1);
 
 <details>
     <summary>
+        <h3>Batch async send multiple invoices and check for UPO</h3>
+    </summary>
+
+```php
+<?php
+
+use N1ebieski\KSEFClient\ClientBuilder;
+use N1ebieski\KSEFClient\Factories\EncryptionKeyFactory;
+use N1ebieski\KSEFClient\Support\Utility;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaSprzedazyTowaruFixture;
+use N1ebieski\KSEFClient\ValueObjects\Mode;
+
+$encryptionKey = EncryptionKeyFactory::makeRandom();
+
+$client = (new ClientBuilder())
+    ->withMode(Mode::Test)
+    ->withIdentifier('NIP_NUMBER')
+    ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
+    ->withEncryptionKey($encryptionKey)
+    ->build();
+
+$faktury = array_map(
+    fn () => (new FakturaSprzedazyTowaruFixture())
+        ->withTodayDate()
+        ->withRandomInvoiceNumber()
+        ->data,
+    range(1, 100)
+);
+
+// For sending invoices as DTOs use OpenRequest DTO or array
+// For sending invoices as XMLs use OpenXmlRequest DTO
+// For sending invoices as ZIP use OpenZipRequest DTO
+$openResponse = $client->sessions()->batch()->openAndSend([
+    'formCode' => 'FA (3)',
+    'faktury' => $faktury
+])->object();
+
+$client->sessions()->batch()->close([
+    'referenceNumber' => $openResponse->referenceNumber
+]);
+
+$statusResponse = Utility::retry(function () use ($client, $openResponse) {
+    $statusResponse = $client->sessions()->status([
+        'referenceNumber' => $openResponse->referenceNumber,
+    ])->object();
+
+    if ($statusResponse->status->code === 200) {
+        return $statusResponse;
+    }
+
+    if ($statusResponse->status->code >= 400) {
+        throw new RuntimeException(
+            $statusResponse->status->description,
+            $statusResponse->status->code
+        );
+    }
+});
+
+$upo = file_get_contents($statusResponse->upo->pages[0]->downloadUrl);
+```
+
+</details>
+
+<details>
+    <summary>
         <h3>Create an offline invoice and generate both QR codes</h3>
     </summary>
 
@@ -948,10 +1078,10 @@ use N1ebieski\KSEFClient\Actions\ConvertEcdsaDerToRaw\ConvertEcdsaDerToRawHandle
 use N1ebieski\KSEFClient\Actions\GenerateQRCodes\GenerateQRCodesAction;
 use N1ebieski\KSEFClient\Actions\GenerateQRCodes\GenerateQRCodesHandler;
 use N1ebieski\KSEFClient\DTOs\QRCodes;
-use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Online\Faktura;
+use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Faktura;
 use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendFakturaSprzedazyTowaruRequestFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaSprzedazyTowaruFixture;
 use N1ebieski\KSEFClient\ValueObjects\CertificatePath;
 
 $nip = 'NIP_NUMBER';
@@ -963,11 +1093,9 @@ $certificate = CertificateFactory::make(
     CertificatePath::from($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
 );
 
-$fixture = (new SendFakturaSprzedazyTowaruRequestFixture())
-    ->withTodayDate()
-    ->withRandomInvoiceNumber();
+$fakturaFixture = (new FakturaSprzedazyTowaruFixture())->withTodayDate()->withRandomInvoiceNumber();
 
-$faktura = Faktura::from($fixture->getFaktura());
+$faktura = Faktura::from($fakturaFixture->data);
 
 $generateQRCodesHandler = new GenerateQRCodesHandler(
     qrCodeBuilder: (new QrCodeBuilder())
@@ -1091,7 +1219,7 @@ vendor/bin/pest
 
 ## Roadmap
 
-1. Batch endpoints
+1. Implementation of other endpoints
 2. Prepare the package for release candidate
 
 ## Special thanks

@@ -13,7 +13,15 @@ interface HttpClientInterface
 {
     public function sendRequest(Request $request): ResponseInterface;
 
+    /**
+     * @param array<int, Request> $requests
+     * @return array<int, ResponseInterface|null>
+     */
+    public function sendAsyncRequest(array $requests): array;
+
     public function withAccessToken(AccessToken $accessToken): self;
+
+    public function withoutAccessToken(): self;
 
     public function withEncryptedKey(EncryptedKey $encryptedKey): self;
 }

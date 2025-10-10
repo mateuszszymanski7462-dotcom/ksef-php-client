@@ -39,6 +39,8 @@ final class ListRequest extends AbstractRequest implements ParametersInterface, 
     public function toHeaders(): array
     {
         return [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
             ...($this->continuationToken instanceof ContinuationToken ? [
                 'x-continuation-token' => $this->continuationToken->value
             ] : [])

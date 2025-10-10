@@ -40,9 +40,9 @@ test('valid response', function (ListRequestFixture $requestFixture, ListRespons
 
     expect($request)->toBeFixture($requestFixture->data);
 
-    expect($request->toHeaders())->toBe([
-        'x-continuation-token' => $requestFixture->data['continuationToken'],
-    ]);
+    expect($request->toHeaders())
+        ->toHaveKey('x-continuation-token')
+        ->toContain($requestFixture->data['continuationToken']);
 
     $response = $clientStub->tokens()->list($requestFixture->data)->object();
 

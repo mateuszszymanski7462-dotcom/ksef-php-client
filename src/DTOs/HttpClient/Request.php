@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace N1ebieski\KSEFClient\DTOs\HttpClient;
 
-use N1ebieski\KSEFClient\ValueObjects\HttpClient\Method;
-use N1ebieski\KSEFClient\ValueObjects\HttpClient\Uri;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Arr;
 use N1ebieski\KSEFClient\Support\Optional;
+use N1ebieski\KSEFClient\ValueObjects\HttpClient\Method;
+use N1ebieski\KSEFClient\ValueObjects\HttpClient\Uri;
 
 final class Request extends AbstractDTO
 {
-    /**
-     * @var array<string, string|array<int, string>>
-     */
-    public readonly array $headers;
-
     /**
      * @param array<string, string|array<int, string>> $headers
      * @param array<string, mixed> $parameters
@@ -25,14 +20,13 @@ final class Request extends AbstractDTO
     public function __construct(
         public readonly Method $method = Method::Get,
         public readonly Uri $uri = new Uri('/'),
-        array $headers = [],
-        public readonly array $parameters = [],
-        public readonly array | string | null $body = null
-    ) {
-        $this->headers = array_merge([
+        public readonly array $headers = [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ], $headers);
+        ],
+        public readonly array $parameters = [],
+        public readonly array | string | null $body = null,
+    ) {
     }
 
     public function withUri(Uri $uri): self
@@ -49,7 +43,7 @@ final class Request extends AbstractDTO
     {
         $parameters = Arr::filterRecursive($this->parameters, fn (mixed $value): bool => ! $value instanceof Optional);
 
-        return $parameters === [] ? '' : http_build_query($parameters);
+        return $parameters === [] ? '' : '?' . http_build_query($parameters);
     }
 
     public function getBodyAsString(): string

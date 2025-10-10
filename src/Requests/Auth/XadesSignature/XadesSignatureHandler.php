@@ -40,6 +40,7 @@ final class XadesSignatureHandler extends AbstractHandler
             uri: Uri::from('auth/xades-signature'),
             headers: [
                 'Content-Type' => 'application/xml',
+                'Accept' => 'application/json',
             ],
             parameters: $request->toParameters(),
             body: $signedXml

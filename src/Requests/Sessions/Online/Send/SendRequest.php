@@ -6,7 +6,7 @@ namespace N1ebieski\KSEFClient\Requests\Sessions\Online\Send;
 
 use N1ebieski\KSEFClient\Contracts\BodyInterface;
 use N1ebieski\KSEFClient\Contracts\XmlSerializableInterface;
-use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Online\Faktura;
+use N1ebieski\KSEFClient\DTOs\Requests\Sessions\Faktura;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\ValueObjects\Requests\ReferenceNumber;
