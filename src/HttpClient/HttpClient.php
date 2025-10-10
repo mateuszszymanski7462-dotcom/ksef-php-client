@@ -119,7 +119,7 @@ final class HttpClient implements HttpClientInterface
             $clientResponses = $this->client->sendAsyncRequest($clientRequests, $this->config->asyncMaxConcurrency);
 
             $responses = array_map(function (?BaseResponseInterface $response): ?ResponseInterface {
-                if (!$response instanceof \Psr\Http\Message\ResponseInterface) {
+                if ( ! $response instanceof \Psr\Http\Message\ResponseInterface) {
                     return $response;
                 }
 
