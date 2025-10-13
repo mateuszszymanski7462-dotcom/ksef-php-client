@@ -59,7 +59,7 @@ final class GenerateQRCodesHandler extends AbstractHandler
                 $invoiceBase64
             ];
 
-            $certificateLink = implode('/', $code2Parts);
+            $certificateLink = ltrim(implode('/', $code2Parts), 'https://');
 
             $signature = '';
 
