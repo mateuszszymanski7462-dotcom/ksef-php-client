@@ -368,7 +368,7 @@ $response = $client->auth()->sessions()->list(
 https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Aktywne-sesje/paths/~1api~1v2~1auth~1sessions~1current/delete
 
 ```php
-$response = $client->auth()->sessions()->revokeCurrent()->object();
+$response = $client->auth()->sessions()->revokeCurrent()->status();
 ```
 </details>
 
@@ -384,7 +384,7 @@ use N1ebieski\KSEFClient\Requests\Auth\Sessions\Revoke\RevokeRequest;
 
 $response = $client->auth()->sessions()->revoke(
     new RevokeRequest(...)
-)->object();
+)->status();
 ```
 </details>
 
