@@ -982,9 +982,11 @@ use N1ebieski\KSEFClient\ValueObjects\Mode;
 
 $encryptionKey = EncryptionKeyFactory::makeRandom();
 
+$nip = 'NIP_NUMBER';
+
 $client = (new ClientBuilder())
     ->withMode(Mode::Test)
-    ->withIdentifier('NIP_NUMBER')
+    ->withIdentifier($nip)
     ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
     ->withEncryptionKey($encryptionKey)
     ->build();
@@ -993,7 +995,10 @@ $openResponse = $client->sessions()->online()->open([
     'formCode' => 'FA (3)',
 ])->object();
 
-$fakturaFixture = (new FakturaSprzedazyTowaruFixture())->withRandomInvoiceNumber()->withTodayDate();
+$fakturaFixture = (new FakturaSprzedazyTowaruFixture())
+    ->withRandomInvoiceNumber()
+    ->withNip($nip)
+    ->withTodayDate();
 
 $fixture = (new SendRequestFixture())->withFakturaFixture($fakturaFixture);
 
@@ -1069,9 +1074,11 @@ use N1ebieski\KSEFClient\ValueObjects\Mode;
 
 $encryptionKey = EncryptionKeyFactory::makeRandom();
 
+$nip = 'NIP_NUMBER';
+
 $client = (new ClientBuilder())
     ->withMode(Mode::Test)
-    ->withIdentifier('NIP_NUMBER')
+    ->withIdentifier($nip)
     ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
     ->withEncryptionKey($encryptionKey)
     ->build();
@@ -1079,6 +1086,7 @@ $client = (new ClientBuilder())
 $faktury = array_map(
     fn () => (new FakturaSprzedazyTowaruFixture())
         ->withTodayDate()
+        ->withNip($nip)
         ->withRandomInvoiceNumber()
         ->data,
     range(1, 100)
@@ -1148,7 +1156,10 @@ $certificate = CertificateFactory::make(
     CertificatePath::from($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
 );
 
-$fakturaFixture = (new FakturaSprzedazyTowaruFixture())->withTodayDate()->withRandomInvoiceNumber();
+$fakturaFixture = (new FakturaSprzedazyTowaruFixture())
+    ->withTodayDate()
+    ->withNip($nip)
+    ->withRandomInvoiceNumber();
 
 $faktura = Faktura::from($fakturaFixture->data);
 

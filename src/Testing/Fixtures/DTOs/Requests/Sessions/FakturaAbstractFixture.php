@@ -32,7 +32,7 @@ abstract class FakturaAbstractFixture extends BaseAbstractFixture
         return $this;
     }
 
-    public function withNIP(string $nip): self
+    public function withNip(string $nip): self
     {
         $this->data['podmiot1']['daneIdentyfikacyjne']['nip'] = $nip;
 
