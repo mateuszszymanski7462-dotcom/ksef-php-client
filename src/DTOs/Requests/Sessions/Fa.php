@@ -165,7 +165,7 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
         $fa->appendChild($p_1);
 
         if ($this->p_1M instanceof P_1M) {
-            $p_1M = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_1Ms');
+            $p_1M = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_1M');
             $p_1M->appendChild($dom->createTextNode((string) $this->p_1M));
             $fa->appendChild($p_1M);
         }
