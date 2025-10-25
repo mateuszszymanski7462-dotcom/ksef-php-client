@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\OpisInnegoTransportu;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\TransportInny;
@@ -26,15 +27,15 @@ final class TransportInnyGroup extends AbstractDTO implements DomSerializableInt
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $transportInnyGroup = $dom->createElement('TransportInnyGroup');
+        $transportInnyGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'TransportInnyGroup');
         $dom->appendChild($transportInnyGroup);
 
-        $transportInny = $dom->createElement('TransportInny');
+        $transportInny = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'TransportInny');
         $transportInny->appendChild($dom->createTextNode((string) $this->transportInny->value));
 
         $transportInnyGroup->appendChild($transportInny);
 
-        $opisInnegoTransportu = $dom->createElement('OpisInnegoTransportu');
+        $opisInnegoTransportu = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisInnegoTransportu');
         $opisInnegoTransportu->appendChild($dom->createTextNode((string) $this->opisInnegoTransportu));
 
         $transportInnyGroup->appendChild($opisInnegoTransportu);

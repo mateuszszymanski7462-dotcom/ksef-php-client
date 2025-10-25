@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrZleceniaTransportu;
@@ -27,7 +28,7 @@ final class Transport extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $transport = $dom->createElement('Transport');
+        $transport = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Transport');
         $dom->appendChild($transport);
 
         /** @var DOMElement $transportGroup */
@@ -44,7 +45,7 @@ final class Transport extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->nrZleceniaTransportu instanceof NrZleceniaTransportu) {
-            $nrZleceniaTransportu = $dom->createElement('NrZleceniaTransportu');
+            $nrZleceniaTransportu = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrZleceniaTransportu');
             $nrZleceniaTransportu->appendChild($dom->createTextNode((string) $this->nrZleceniaTransportu));
 
             $transport->appendChild($nrZleceniaTransportu);

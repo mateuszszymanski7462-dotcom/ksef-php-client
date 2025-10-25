@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Kwota;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Powod;
@@ -27,15 +28,15 @@ final class Odliczenia extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $odliczenia = $dom->createElement('Odliczenia');
+        $odliczenia = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Odliczenia');
         $dom->appendChild($odliczenia);
 
-        $kwota = $dom->createElement('Kwota');
+        $kwota = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Kwota');
         $kwota->appendChild($dom->createTextNode((string) $this->kwota->value));
 
         $odliczenia->appendChild($kwota);
 
-        $powod = $dom->createElement('Powod');
+        $powod = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Powod');
         $powod->appendChild($dom->createTextNode($this->powod->value));
 
         $odliczenia->appendChild($powod);

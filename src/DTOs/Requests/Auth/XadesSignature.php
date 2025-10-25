@@ -40,10 +40,10 @@ final class XadesSignature extends AbstractDTO implements XmlSerializableInterfa
 
         $dom->appendChild($authTokenRequest);
 
-        $challenge = $dom->createElement('Challenge', (string) $this->challenge);
+        $challenge = $dom->createElementNS((string) XmlNamespace::Auth->value, 'Challenge', (string) $this->challenge);
         $authTokenRequest->appendChild($challenge);
 
-        $contextIdentifier = $dom->createElement('ContextIdentifier');
+        $contextIdentifier = $dom->createElementNS((string) XmlNamespace::Auth->value, 'ContextIdentifier');
 
         /** @var DOMElement $contextIdentifierGroup */
         $contextIdentifierGroup = $this->contextIdentifierGroup->toDom()->documentElement;
@@ -54,7 +54,7 @@ final class XadesSignature extends AbstractDTO implements XmlSerializableInterfa
 
         $authTokenRequest->appendChild($contextIdentifier);
 
-        $subjectIdentifierType = $dom->createElement('SubjectIdentifierType', (string) $this->subjectIdentifierType->value);
+        $subjectIdentifierType = $dom->createElementNS((string) XmlNamespace::Auth->value, 'SubjectIdentifierType', (string) $this->subjectIdentifierType->value);
         $authTokenRequest->appendChild($subjectIdentifierType);
 
         return $dom;

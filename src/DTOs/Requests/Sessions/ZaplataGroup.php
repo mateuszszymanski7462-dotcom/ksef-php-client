@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataZaplaty;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Zaplacono;
@@ -28,15 +29,15 @@ final class ZaplataGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zaplataGroup = $dom->createElement('ZaplataGroup');
+        $zaplataGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZaplataGroup');
         $dom->appendChild($zaplataGroup);
 
-        $zaplacono = $dom->createElement('Zaplacono');
+        $zaplacono = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Zaplacono');
         $zaplacono->appendChild($dom->createTextNode((string) $this->zaplacono->value));
 
         $zaplataGroup->appendChild($zaplacono);
 
-        $dataZaplaty = $dom->createElement('DataZaplaty');
+        $dataZaplaty = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataZaplaty');
         $dataZaplaty->appendChild($dom->createTextNode((string) $this->dataZaplaty));
 
         $zaplataGroup->appendChild($dataZaplaty);

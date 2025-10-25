@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_13_5;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_14_5;
@@ -29,16 +30,16 @@ final class P_13_5Group extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_13_5Group = $dom->createElement('P_13_5Group');
+        $p_13_5Group = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_5Group');
         $dom->appendChild($p_13_5Group);
 
-        $p_13_5 = $dom->createElement('P_13_5');
+        $p_13_5 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_5');
         $p_13_5->appendChild($dom->createTextNode((string) $this->p_13_5));
 
         $p_13_5Group->appendChild($p_13_5);
 
         if ($this->p_14_5 instanceof P_14_5) {
-            $p_14_5 = $dom->createElement('P_14_5');
+            $p_14_5 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_14_5');
             $p_14_5->appendChild($dom->createTextNode((string) $this->p_14_5));
 
             $p_13_5Group->appendChild($p_14_5);

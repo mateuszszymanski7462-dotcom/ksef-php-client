@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\JednostkaOpakowania;
@@ -24,7 +25,7 @@ final class LadunekGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $ladunekGroup = $dom->createElement('LadunekGroup');
+        $ladunekGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'LadunekGroup');
         $dom->appendChild($ladunekGroup);
 
         /** @var DOMElement $opisLadunkuGroup */
@@ -35,7 +36,7 @@ final class LadunekGroup extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->jednostkaOpakowania instanceof JednostkaOpakowania) {
-            $jednostkaOpakowania = $dom->createElement('JednostkaOpakowania');
+            $jednostkaOpakowania = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'JednostkaOpakowania');
             $jednostkaOpakowania->appendChild($dom->createTextNode((string) $this->jednostkaOpakowania));
 
             $ladunekGroup->appendChild($jednostkaOpakowania);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\IDWew;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -25,10 +26,10 @@ final class IDWewGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $iDWewGroup = $dom->createElement('IDWewGroup');
+        $iDWewGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IDWewGroup');
         $dom->appendChild($iDWewGroup);
 
-        $iDWew = $dom->createElement('IDWew');
+        $iDWew = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IDWew');
         $iDWew->appendChild($dom->createTextNode($this->iDWew->value));
 
         $iDWewGroup->appendChild($iDWew);

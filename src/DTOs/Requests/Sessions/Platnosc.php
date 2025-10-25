@@ -11,6 +11,7 @@ use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Platnosc extends AbstractDTO implements DomSerializableInterface
 {
@@ -62,7 +63,7 @@ final class Platnosc extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $platnosc = $dom->createElement('Platnosc');
+        $platnosc = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Platnosc');
         $dom->appendChild($platnosc);
 
         if ( ! $this->zaplataGroup instanceof Optional) {

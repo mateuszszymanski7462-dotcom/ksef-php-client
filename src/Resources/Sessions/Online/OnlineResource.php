@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\Resources\Sessions\Online;
 
 use N1ebieski\KSEFClient\Actions\EncryptDocument\EncryptDocumentHandler;
+use N1ebieski\KSEFClient\Actions\ValidateXml\ValidateXmlHandler;
 use N1ebieski\KSEFClient\Contracts\HttpClient\HttpClientInterface;
 use N1ebieski\KSEFClient\Contracts\HttpClient\ResponseInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Sessions\Online\OnlineResourceInterface;
 use N1ebieski\KSEFClient\DTOs\Config;
+use N1ebieski\KSEFClient\Exceptions\ExceptionHandler;
 use N1ebieski\KSEFClient\Requests\Sessions\Online\Close\CloseHandler;
 use N1ebieski\KSEFClient\Requests\Sessions\Online\Close\CloseRequest;
 use N1ebieski\KSEFClient\Requests\Sessions\Online\Open\OpenHandler;
@@ -55,6 +57,8 @@ final class OnlineResource extends AbstractResource implements OnlineResourceInt
         return (new SendHandler(
             client: $this->client,
             encryptDocument: new EncryptDocumentHandler($this->logger),
+            validateXml: new ValidateXmlHandler(),
+            exceptionHandler: new ExceptionHandler($this->logger),
             config: $this->config
         ))->handle($request);
     }

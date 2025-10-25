@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KursWalutyZK;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_15ZK;
@@ -28,16 +29,16 @@ final class P_15ZKGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p15ZKGroup = $dom->createElement('P_15ZKGroup');
+        $p15ZKGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_15ZKGroup');
         $dom->appendChild($p15ZKGroup);
 
-        $p15ZK = $dom->createElement('P_15ZK');
+        $p15ZK = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_15ZK');
         $p15ZK->appendChild($dom->createTextNode((string) $this->p15ZK));
 
         $p15ZKGroup->appendChild($p15ZK);
 
         if ($this->kursWalutyZK instanceof KursWalutyZK) {
-            $kursWalutyZK = $dom->createElement('KursWalutyZK');
+            $kursWalutyZK = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KursWalutyZK');
             $kursWalutyZK->appendChild($dom->createTextNode((string) $this->kursWalutyZK));
 
             $p15ZKGroup->appendChild($kursWalutyZK);

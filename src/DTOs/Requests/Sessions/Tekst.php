@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Akapit;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -40,11 +41,11 @@ final class Tekst extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $tekst = $dom->createElement('Tekst');
+        $tekst = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Tekst');
         $dom->appendChild($tekst);
 
         foreach ($this->akapit as $akapit) {
-            $_akapit = $dom->createElement('Akapit');
+            $_akapit = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Akapit');
             $_akapit->appendChild($dom->createTextNode((string) $akapit));
 
             $tekst->appendChild($_akapit);

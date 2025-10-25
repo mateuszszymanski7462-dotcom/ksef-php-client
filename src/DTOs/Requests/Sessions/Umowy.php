@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataUmowy;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrUmowy;
@@ -24,18 +25,18 @@ final class Umowy extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $umowy = $dom->createElement('Umowy');
+        $umowy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Umowy');
         $dom->appendChild($umowy);
 
         if ($this->dataUmowy instanceof DataUmowy) {
-            $dataUmowy = $dom->createElement('DataUmowy');
+            $dataUmowy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataUmowy');
             $dataUmowy->appendChild($dom->createTextNode((string) $this->dataUmowy));
 
             $umowy->appendChild($dataUmowy);
         }
 
         if ($this->nrUmowy instanceof NrUmowy) {
-            $nrUmowy = $dom->createElement('NrUmowy');
+            $nrUmowy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrUmowy');
             $nrUmowy->appendChild($dom->createTextNode((string) $this->nrUmowy));
 
             $umowy->appendChild($nrUmowy);

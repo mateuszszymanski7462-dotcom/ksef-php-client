@@ -6,9 +6,10 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
+use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NKom;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Typ;
-use N1ebieski\KSEFClient\Support\AbstractDTO;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Kol extends AbstractDTO implements DomSerializableInterface
 {
@@ -28,12 +29,12 @@ final class Kol extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $kol = $dom->createElement('Kol');
+        $kol = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Kol');
         $kol->setAttribute('Typ', (string) $this->typ->value);
 
         $dom->appendChild($kol);
 
-        $nKom = $dom->createElement('NKom');
+        $nKom = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NKom');
         $nKom->appendChild($dom->createTextNode((string) $this->nKom));
 
         $kol->appendChild($nKom);

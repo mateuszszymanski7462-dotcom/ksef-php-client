@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Nazwa;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -23,15 +24,15 @@ final class Podmiot1DaneIdentyfikacyjne extends AbstractDTO implements DomSerial
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $daneIdentyfikacyjne = $dom->createElement('DaneIdentyfikacyjne');
+        $daneIdentyfikacyjne = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DaneIdentyfikacyjne');
         $dom->appendChild($daneIdentyfikacyjne);
 
-        $nip = $dom->createElement('NIP');
+        $nip = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NIP');
         $nip->appendChild($dom->createTextNode((string) $this->nip));
 
         $daneIdentyfikacyjne->appendChild($nip);
 
-        $nazwa = $dom->createElement('Nazwa');
+        $nazwa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Nazwa');
         $nazwa->appendChild($dom->createTextNode((string) $this->nazwa));
 
         $daneIdentyfikacyjne->appendChild($nazwa);

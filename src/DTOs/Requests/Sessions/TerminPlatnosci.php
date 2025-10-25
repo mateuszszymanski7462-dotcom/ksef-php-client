@@ -6,9 +6,10 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Termin;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Termin;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class TerminPlatnosci extends AbstractDTO implements DomSerializableInterface
 {
@@ -27,11 +28,11 @@ final class TerminPlatnosci extends AbstractDTO implements DomSerializableInterf
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $terminPlatnosci = $dom->createElement('TerminPlatnosci');
+        $terminPlatnosci = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'TerminPlatnosci');
         $dom->appendChild($terminPlatnosci);
 
         if ($this->termin instanceof Termin) {
-            $termin = $dom->createElement('Termin');
+            $termin = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Termin');
             $termin->appendChild($dom->createTextNode((string) $this->termin));
 
             $terminPlatnosci->appendChild($termin);

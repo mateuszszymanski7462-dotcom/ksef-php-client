@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\CNZ;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\GTINZ;
@@ -82,142 +83,142 @@ final class ZamowienieWiersz extends AbstractDTO implements DomSerializableInter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zamowienieWiersz = $dom->createElement('ZamowienieWiersz');
+        $zamowienieWiersz = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZamowienieWiersz');
         $dom->appendChild($zamowienieWiersz);
 
-        $nrWierszaZam = $dom->createElement('NrWierszaZam');
+        $nrWierszaZam = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrWierszaZam');
         $nrWierszaZam->appendChild($dom->createTextNode((string) $this->nrWierszaZam));
 
         $zamowienieWiersz->appendChild($nrWierszaZam);
 
         if ($this->uu_idZ instanceof UU_IDZ) {
-            $uu_idZ = $dom->createElement('UU_IDZ');
+            $uu_idZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'UU_IDZ');
             $uu_idZ->appendChild($dom->createTextNode((string) $this->uu_idZ));
 
             $zamowienieWiersz->appendChild($uu_idZ);
         }
 
         if ($this->p_7Z instanceof P_7Z) {
-            $p_7Z = $dom->createElement('P_7Z');
+            $p_7Z = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_7Z');
             $p_7Z->appendChild($dom->createTextNode((string) $this->p_7Z));
 
             $zamowienieWiersz->appendChild($p_7Z);
         }
 
         if ($this->indeksZ instanceof IndeksZ) {
-            $indeksZ = $dom->createElement('IndeksZ');
+            $indeksZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IndeksZ');
             $indeksZ->appendChild($dom->createTextNode((string) $this->indeksZ));
 
             $zamowienieWiersz->appendChild($indeksZ);
         }
 
         if ($this->gtinZ instanceof GTINZ) {
-            $gtinZ = $dom->createElement('GTINZ');
+            $gtinZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'GTINZ');
             $gtinZ->appendChild($dom->createTextNode((string) $this->gtinZ));
 
             $zamowienieWiersz->appendChild($gtinZ);
         }
 
         if ($this->pkwiuZ instanceof PKWiUZ) {
-            $pkwiuZ = $dom->createElement('PKWiUZ');
+            $pkwiuZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PKWiUZ');
             $pkwiuZ->appendChild($dom->createTextNode((string) $this->pkwiuZ));
 
             $zamowienieWiersz->appendChild($pkwiuZ);
         }
 
         if ($this->cnZ instanceof CNZ) {
-            $cnZ = $dom->createElement('CNZ');
+            $cnZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'CNZ');
             $cnZ->appendChild($dom->createTextNode((string) $this->cnZ));
 
             $zamowienieWiersz->appendChild($cnZ);
         }
 
         if ($this->pkobZ instanceof PKOBZ) {
-            $pkobZ = $dom->createElement('PKOBZ');
+            $pkobZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PKOBZ');
             $pkobZ->appendChild($dom->createTextNode((string) $this->pkobZ));
 
             $zamowienieWiersz->appendChild($pkobZ);
         }
 
         if ($this->p_8AZ instanceof P_8AZ) {
-            $p_8AZ = $dom->createElement('P_8AZ');
+            $p_8AZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_8AZ');
             $p_8AZ->appendChild($dom->createTextNode((string) $this->p_8AZ));
 
             $zamowienieWiersz->appendChild($p_8AZ);
         }
 
         if ($this->p_8BZ instanceof P_8BZ) {
-            $p_8BZ = $dom->createElement('P_8BZ');
+            $p_8BZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_8BZ');
             $p_8BZ->appendChild($dom->createTextNode((string) $this->p_8BZ));
 
             $zamowienieWiersz->appendChild($p_8BZ);
         }
 
         if ($this->p_9AZ instanceof P_9AZ) {
-            $p_9AZ = $dom->createElement('P_9AZ');
+            $p_9AZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_9AZ');
             $p_9AZ->appendChild($dom->createTextNode((string) $this->p_9AZ));
 
             $zamowienieWiersz->appendChild($p_9AZ);
         }
 
         if ($this->p_11NettoZ instanceof P_11NettoZ) {
-            $p_11NettoZ = $dom->createElement('P_11NettoZ');
+            $p_11NettoZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_11NettoZ');
             $p_11NettoZ->appendChild($dom->createTextNode((string) $this->p_11NettoZ));
 
             $zamowienieWiersz->appendChild($p_11NettoZ);
         }
 
         if ($this->p_11VatZ instanceof P_11VatZ) {
-            $p_11VatZ = $dom->createElement('P_11VatZ');
+            $p_11VatZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_11VatZ');
             $p_11VatZ->appendChild($dom->createTextNode((string) $this->p_11VatZ));
 
             $zamowienieWiersz->appendChild($p_11VatZ);
         }
 
         if ($this->p_12Z instanceof P_12Z) {
-            $p_12Z = $dom->createElement('P_12Z');
+            $p_12Z = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_12Z');
             $p_12Z->appendChild($dom->createTextNode((string) $this->p_12Z->value));
 
             $zamowienieWiersz->appendChild($p_12Z);
         }
 
         if ($this->p_12Z_XII instanceof P_12Z_XII) {
-            $p_12Z_XII = $dom->createElement('P_12Z_XII');
+            $p_12Z_XII = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_12Z_XII');
             $p_12Z_XII->appendChild($dom->createTextNode((string) $this->p_12Z_XII));
 
             $zamowienieWiersz->appendChild($p_12Z_XII);
         }
 
         if ($this->p_12Z_Zal_15 instanceof P_12Z_Zal_15) {
-            $p_12Z_Zal_15 = $dom->createElement('P_12Z_Zal_15');
+            $p_12Z_Zal_15 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_12Z_Zal_15');
             $p_12Z_Zal_15->appendChild($dom->createTextNode((string) $this->p_12Z_Zal_15->value));
 
             $zamowienieWiersz->appendChild($p_12Z_Zal_15);
         }
 
         if ($this->gtuZ instanceof GTUZ) {
-            $gtuZ = $dom->createElement('GTUZ');
+            $gtuZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'GTUZ');
             $gtuZ->appendChild($dom->createTextNode((string) $this->gtuZ->value));
 
             $zamowienieWiersz->appendChild($gtuZ);
         }
 
         if ($this->proceduraZ instanceof ProceduraZ) {
-            $proceduraZ = $dom->createElement('ProceduraZ');
+            $proceduraZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ProceduraZ');
             $proceduraZ->appendChild($dom->createTextNode((string) $this->proceduraZ->value));
 
             $zamowienieWiersz->appendChild($proceduraZ);
         }
 
         if ($this->kwotaAkcyzyZ instanceof KwotaAkcyzyZ) {
-            $kwotaAkcyzyZ = $dom->createElement('KwotaAkcyzyZ');
+            $kwotaAkcyzyZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KwotaAkcyzyZ');
             $kwotaAkcyzyZ->appendChild($dom->createTextNode((string) $this->kwotaAkcyzyZ));
 
             $zamowienieWiersz->appendChild($kwotaAkcyzyZ);
         }
 
         if ($this->stanPrzedZ instanceof StanPrzedZ) {
-            $stanPrzedZ = $dom->createElement('StanPrzedZ');
+            $stanPrzedZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'StanPrzedZ');
             $stanPrzedZ->appendChild($dom->createTextNode((string) $this->stanPrzedZ->value));
 
             $zamowienieWiersz->appendChild($stanPrzedZ);

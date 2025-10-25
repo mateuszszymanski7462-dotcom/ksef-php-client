@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Email;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Telefon;
@@ -24,17 +25,17 @@ final class DaneKontaktowe extends AbstractDTO implements DomSerializableInterfa
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $daneKontaktowe = $dom->createElement('DaneKontaktowe');
+        $daneKontaktowe = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DaneKontaktowe');
         $dom->appendChild($daneKontaktowe);
 
         if ($this->email instanceof Email) {
-            $email = $dom->createElement('Email');
+            $email = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Email');
             $email->appendChild($dom->createTextNode((string) $this->email));
             $daneKontaktowe->appendChild($email);
         }
 
         if ($this->telefon instanceof Telefon) {
-            $telefon = $dom->createElement('Telefon');
+            $telefon = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Telefon');
             $telefon->appendChild($dom->createTextNode((string) $this->telefon));
             $daneKontaktowe->appendChild($telefon);
         }

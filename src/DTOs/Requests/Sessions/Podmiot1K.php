@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\PrefiksPodatnika;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -30,11 +31,11 @@ final class Podmiot1K extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $podmiot1K = $dom->createElement('Podmiot1K');
+        $podmiot1K = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Podmiot1K');
         $dom->appendChild($podmiot1K);
 
         if ($this->prefiksPodatnika instanceof PrefiksPodatnika) {
-            $prefiksPodatnika = $dom->createElement('PrefiksPodatnika');
+            $prefiksPodatnika = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PrefiksPodatnika');
             $prefiksPodatnika->appendChild($dom->createTextNode((string) $this->prefiksPodatnika));
             $podmiot1K->appendChild($prefiksPodatnika);
         }

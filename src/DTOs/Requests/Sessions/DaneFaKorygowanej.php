@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataWystFaKorygowanej;
@@ -28,15 +29,15 @@ final class DaneFaKorygowanej implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $daneFaKorygowanej = $dom->createElement('DaneFaKorygowanej');
+        $daneFaKorygowanej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DaneFaKorygowanej');
         $dom->appendChild($daneFaKorygowanej);
 
-        $dataWystFaKorygowanej = $dom->createElement('DataWystFaKorygowanej');
+        $dataWystFaKorygowanej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataWystFaKorygowanej');
         $dataWystFaKorygowanej->appendChild($dom->createTextNode((string) $this->dataWystFaKorygowanej));
 
         $daneFaKorygowanej->appendChild($dataWystFaKorygowanej);
 
-        $nrFaKorygowanej = $dom->createElement('NrFaKorygowanej');
+        $nrFaKorygowanej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrFaKorygowanej');
         $nrFaKorygowanej->appendChild($dom->createTextNode((string) $this->nrFaKorygowanej));
 
         $daneFaKorygowanej->appendChild($nrFaKorygowanej);

@@ -7,12 +7,13 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\SumaObciazen;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\SumaOdliczen;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\SumaObciazen;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\SumaOdliczen;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Rozliczenie extends AbstractDTO implements DomSerializableInterface
 {
@@ -54,7 +55,7 @@ final class Rozliczenie extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $rozliczenie = $dom->createElement('Rozliczenie');
+        $rozliczenie = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Rozliczenie');
         $dom->appendChild($rozliczenie);
 
         if ( ! $this->obciazenia instanceof Optional) {
@@ -66,7 +67,7 @@ final class Rozliczenie extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->sumaObciazen instanceof SumaObciazen) {
-            $sumaObciazen = $dom->createElement('SumaObciazen');
+            $sumaObciazen = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'SumaObciazen');
             $sumaObciazen->appendChild($dom->createTextNode((string) $this->sumaObciazen));
 
             $rozliczenie->appendChild($sumaObciazen);
@@ -81,7 +82,7 @@ final class Rozliczenie extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->sumaOdliczen instanceof SumaOdliczen) {
-            $sumaOdliczen = $dom->createElement('SumaOdliczen');
+            $sumaOdliczen = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'SumaOdliczen');
             $sumaOdliczen->appendChild($dom->createTextNode((string) $this->sumaOdliczen));
 
             $rozliczenie->appendChild($sumaOdliczen);

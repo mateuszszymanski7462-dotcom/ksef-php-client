@@ -7,6 +7,10 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
+use N1ebieski\KSEFClient\Support\AbstractDTO;
+use N1ebieski\KSEFClient\Support\Optional;
+use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
+use N1ebieski\KSEFClient\Validator\Validator;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\FP;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KodWaluty;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KursWalutyZ;
@@ -26,10 +30,7 @@ use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\RodzajFaktury;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\TP;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\WZ;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\ZwrotAkcyzy;
-use N1ebieski\KSEFClient\Support\AbstractDTO;
-use N1ebieski\KSEFClient\Support\Optional;
-use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
-use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Fa extends AbstractDTO implements DomSerializableInterface
 {
@@ -150,33 +151,33 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $fa = $dom->createElement('Fa');
+        $fa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Fa');
         $dom->appendChild($fa);
 
-        $kodWaluty = $dom->createElement('KodWaluty');
+        $kodWaluty = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KodWaluty');
         $kodWaluty->appendChild($dom->createTextNode((string) $this->kodWaluty));
 
         $fa->appendChild($kodWaluty);
 
-        $p_1 = $dom->createElement('P_1');
+        $p_1 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_1');
         $p_1->appendChild($dom->createTextNode((string) $this->p_1));
 
         $fa->appendChild($p_1);
 
         if ($this->p_1M instanceof P_1M) {
-            $p_1M = $dom->createElement('P_1M');
+            $p_1M = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_1M');
             $p_1M->appendChild($dom->createTextNode((string) $this->p_1M));
             $fa->appendChild($p_1M);
         }
 
-        $p_2 = $dom->createElement('P_2');
+        $p_2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_2');
         $p_2->appendChild($dom->createTextNode((string) $this->p_2));
 
         $fa->appendChild($p_2);
 
         if ( ! $this->wz instanceof Optional) {
             foreach ($this->wz as $wz) {
-                $_wz = $dom->createElement('WZ');
+                $_wz = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WZ');
                 $_wz->appendChild($dom->createTextNode((string) $wz));
 
                 $fa->appendChild($_wz);
@@ -238,68 +239,68 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->p_13_6_1 instanceof P_13_6_1) {
-            $p13_6_1 = $dom->createElement('P_13_6_1');
+            $p13_6_1 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_6_1');
             $p13_6_1->appendChild($dom->createTextNode((string) $this->p_13_6_1));
 
             $fa->appendChild($p13_6_1);
         }
 
         if ($this->p_13_6_2 instanceof P_13_6_2) {
-            $p13_6_2 = $dom->createElement('P_13_6_2');
+            $p13_6_2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_6_2');
             $p13_6_2->appendChild($dom->createTextNode((string) $this->p_13_6_2));
 
             $fa->appendChild($p13_6_2);
         }
 
         if ($this->p_13_6_3 instanceof P_13_6_3) {
-            $p13_6_3 = $dom->createElement('P_13_6_3');
+            $p13_6_3 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_6_3');
             $p13_6_3->appendChild($dom->createTextNode((string) $this->p_13_6_3));
 
             $fa->appendChild($p13_6_3);
         }
 
         if ($this->p_13_7 instanceof P_13_7) {
-            $p13_7 = $dom->createElement('P_13_7');
+            $p13_7 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_7');
             $p13_7->appendChild($dom->createTextNode((string) $this->p_13_7));
 
             $fa->appendChild($p13_7);
         }
 
         if ($this->p_13_8 instanceof P_13_8) {
-            $p13_8 = $dom->createElement('P_13_8');
+            $p13_8 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_8');
             $p13_8->appendChild($dom->createTextNode((string) $this->p_13_8));
 
             $fa->appendChild($p13_8);
         }
 
         if ($this->p_13_9 instanceof P_13_9) {
-            $p13_9 = $dom->createElement('P_13_9');
+            $p13_9 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_9');
             $p13_9->appendChild($dom->createTextNode((string) $this->p_13_9));
 
             $fa->appendChild($p13_9);
         }
 
         if ($this->p_13_10 instanceof P_13_10) {
-            $p13_10 = $dom->createElement('P_13_10');
+            $p13_10 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_10');
             $p13_10->appendChild($dom->createTextNode((string) $this->p_13_10));
 
             $fa->appendChild($p13_10);
         }
 
         if ($this->p_13_11 instanceof P_13_11) {
-            $p13_11 = $dom->createElement('P_13_11');
+            $p13_11 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_11');
             $p13_11->appendChild($dom->createTextNode((string) $this->p_13_11));
 
             $fa->appendChild($p13_11);
         }
 
-        $p_15 = $dom->createElement('P_15');
+        $p_15 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_15');
         $p_15->appendChild($dom->createTextNode((string) $this->p_15));
 
         $fa->appendChild($p_15);
 
         if ($this->kursWalutyZ instanceof KursWalutyZ) {
-            $kursWalutyZ = $dom->createElement('KursWalutyZ');
+            $kursWalutyZ = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KursWalutyZ');
             $kursWalutyZ->appendChild($dom->createTextNode((string) $this->kursWalutyZ));
 
             $fa->appendChild($kursWalutyZ);
@@ -309,7 +310,7 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
 
         $fa->appendChild($adnotacje);
 
-        $rodzajFaktury = $dom->createElement('RodzajFaktury');
+        $rodzajFaktury = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RodzajFaktury');
         $rodzajFaktury->appendChild($dom->createTextNode((string) $this->rodzajFaktury->value));
 
         $fa->appendChild($rodzajFaktury);
@@ -324,14 +325,14 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->tp instanceof TP) {
-            $tp = $dom->createElement('TP');
+            $tp = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'TP');
             $tp->appendChild($dom->createTextNode((string) $this->tp->value));
 
             $fa->appendChild($tp);
         }
 
         if ($this->fp instanceof FP) {
-            $fp = $dom->createElement('FP');
+            $fp = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'FP');
             $fp->appendChild($dom->createTextNode((string) $this->fp->value));
 
             $fa->appendChild($fp);
@@ -354,7 +355,7 @@ final class Fa extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->zwrotAkcyzy instanceof ZwrotAkcyzy) {
-            $zwrotAkcyzy = $dom->createElement('ZwrotAkcyzy');
+            $zwrotAkcyzy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZwrotAkcyzy');
             $zwrotAkcyzy->appendChild($dom->createTextNode((string) $this->zwrotAkcyzy->value));
 
             $fa->appendChild($zwrotAkcyzy);

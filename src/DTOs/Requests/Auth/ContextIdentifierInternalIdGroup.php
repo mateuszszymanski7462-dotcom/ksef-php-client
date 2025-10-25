@@ -9,6 +9,7 @@ use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\Contracts\Requests\Auth\IdentifierInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\ValueObjects\InternalId;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class ContextIdentifierInternalIdGroup extends AbstractDTO implements DomSerializableInterface, IdentifierInterface
 {
@@ -27,10 +28,10 @@ final class ContextIdentifierInternalIdGroup extends AbstractDTO implements DomS
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $contextIdentifierInternalIdGroup = $dom->createElement('ContextIdentifierInternalIdGroup');
+        $contextIdentifierInternalIdGroup = $dom->createElementNS((string) XmlNamespace::Auth->value, 'ContextIdentifierInternalIdGroup');
         $dom->appendChild($contextIdentifierInternalIdGroup);
 
-        $internalId = $dom->createElement('InternalId');
+        $internalId = $dom->createElementNS((string) XmlNamespace::Auth->value, 'InternalId');
         $internalId->appendChild($dom->createTextNode((string) $this->internalId));
 
         $contextIdentifierInternalIdGroup->appendChild($internalId);

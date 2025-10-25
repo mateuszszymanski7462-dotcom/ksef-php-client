@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataGodzRozpTransportu;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataGodzZakTransportu;
@@ -48,18 +49,18 @@ final class WysylkaGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $wysylkaGroup = $dom->createElement('WysylkaGroup');
+        $wysylkaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WysylkaGroup');
         $dom->appendChild($wysylkaGroup);
 
         if ($this->dataGodzRozpTransportu instanceof DataGodzRozpTransportu) {
-            $dataGodzRozpTransportu = $dom->createElement('DataGodzRozpTransportu');
+            $dataGodzRozpTransportu = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataGodzRozpTransportu');
             $dataGodzRozpTransportu->appendChild($dom->createTextNode((string) $this->dataGodzRozpTransportu));
 
             $wysylkaGroup->appendChild($dataGodzRozpTransportu);
         }
 
         if ($this->dataGodzZakTransportu instanceof DataGodzZakTransportu) {
-            $dataGodzZakTransportu = $dom->createElement('DataGodzZakTransportu');
+            $dataGodzZakTransportu = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataGodzZakTransportu');
             $dataGodzZakTransportu->appendChild($dom->createTextNode((string) $this->dataGodzZakTransportu));
 
             $wysylkaGroup->appendChild($dataGodzZakTransportu);

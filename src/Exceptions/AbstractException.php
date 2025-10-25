@@ -12,11 +12,14 @@ use Throwable;
 
 abstract class AbstractException extends Exception implements ArrayableInterface
 {
+    /**
+     * @param object|array<string, mixed>|null $context
+     */
     public function __construct(
         string $message = "",
         int $code = 0,
         ?Throwable $previous = null,
-        public readonly ?object $context = null
+        public readonly object|array|null $context = null
     ) {
         parent::__construct($message, $code, $previous);
     }
@@ -27,7 +30,7 @@ abstract class AbstractException extends Exception implements ArrayableInterface
         return Arr::normalize([
             'code' => $this->getCode(),
             'message' => $this->getMessage(),
-            'context' => json_encode($this->context),
+            'context' => $this->context,
         ], $keyType, $only);
     }
 }

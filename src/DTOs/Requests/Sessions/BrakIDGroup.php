@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\BrakID;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -25,10 +26,10 @@ final class BrakIDGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $brakIDGroup = $dom->createElement('BrakIDGroup');
+        $brakIDGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'BrakIDGroup');
         $dom->appendChild($brakIDGroup);
 
-        $brakID = $dom->createElement('BrakID');
+        $brakID = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'BrakID');
         $brakID->appendChild($dom->createTextNode((string) $this->brakID->value));
 
         $brakIDGroup->appendChild($brakID);

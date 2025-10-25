@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\LadunekInny;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\OpisInnegoLadunku;
@@ -27,15 +28,15 @@ final class LadunekInnyGroup extends AbstractDTO implements DomSerializableInter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $ladunekInnyGroup = $dom->createElement('LadunekInnyGroup');
+        $ladunekInnyGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'LadunekInnyGroup');
         $dom->appendChild($ladunekInnyGroup);
 
-        $ladunekInny = $dom->createElement('LadunekInny');
+        $ladunekInny = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'LadunekInny');
         $ladunekInny->appendChild($dom->createTextNode((string) $this->ladunekInny->value));
 
         $ladunekInnyGroup->appendChild($ladunekInny);
 
-        $opisInnegoLadunku = $dom->createElement('OpisInnegoLadunku');
+        $opisInnegoLadunku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisInnegoLadunku');
         $opisInnegoLadunku->appendChild($dom->createTextNode((string) $this->opisInnegoLadunku));
 
         $ladunekInnyGroup->appendChild($opisInnegoLadunku);

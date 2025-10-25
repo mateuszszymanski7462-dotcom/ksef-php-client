@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\OpisRoli;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\RolaInna;
@@ -28,15 +29,15 @@ final class RolaInnaGroup extends AbstractDTO implements DomSerializableInterfac
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $rolaInnaGroup = $dom->createElement('RolaInnaGroup');
+        $rolaInnaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RolaInnaGroup');
         $dom->appendChild($rolaInnaGroup);
 
-        $rolaInna = $dom->createElement('RolaInna');
+        $rolaInna = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RolaInna');
         $rolaInna->appendChild($dom->createTextNode((string) $this->rolaInna->value));
 
         $rolaInnaGroup->appendChild($rolaInna);
 
-        $opisRoli = $dom->createElement('OpisRoli');
+        $opisRoli = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisRoli');
         $opisRoli->appendChild($dom->createTextNode((string) $this->opisRoli));
 
         $rolaInnaGroup->appendChild($opisRoli);

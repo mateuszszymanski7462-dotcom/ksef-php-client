@@ -10,6 +10,7 @@ use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MinRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class TNaglowek extends AbstractDTO implements DomSerializableInterface
 {
@@ -39,7 +40,7 @@ final class TNaglowek extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $tNaglowek = $dom->createElement('TNaglowek');
+        $tNaglowek = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'TNaglowek');
         $dom->appendChild($tNaglowek);
 
         foreach ($this->kol as $kol) {

@@ -7,10 +7,11 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataZaplatyCzesciowej;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KwotaZaplatyCzesciowej;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DataZaplatyCzesciowej;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KwotaZaplatyCzesciowej;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class ZaplataCzesciowa extends AbstractDTO implements DomSerializableInterface
 {
@@ -29,15 +30,15 @@ final class ZaplataCzesciowa extends AbstractDTO implements DomSerializableInter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zaplataCzesciowa = $dom->createElement('ZaplataCzesciowa');
+        $zaplataCzesciowa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZaplataCzesciowa');
         $dom->appendChild($zaplataCzesciowa);
 
-        $kwotaZaplatyCzesciowej = $dom->createElement('KwotaZaplatyCzesciowej');
+        $kwotaZaplatyCzesciowej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KwotaZaplatyCzesciowej');
         $kwotaZaplatyCzesciowej->appendChild($dom->createTextNode((string) $this->kwotaZaplatyCzesciowej));
 
         $zaplataCzesciowa->appendChild($kwotaZaplatyCzesciowej);
 
-        $dataZaplatyCzesciowej = $dom->createElement('DataZaplatyCzesciowej');
+        $dataZaplatyCzesciowej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DataZaplatyCzesciowej');
         $dataZaplatyCzesciowej->appendChild($dom->createTextNode((string) $this->dataZaplatyCzesciowej));
 
         $zaplataCzesciowa->appendChild($dataZaplatyCzesciowej);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrFaZaliczkowej;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKSeFZN;
@@ -27,15 +28,15 @@ final class NrKSeFZNGroup extends AbstractDTO implements DomSerializableInterfac
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $nrKSeFZNGroup = $dom->createElement('NrKSeFZNGroup');
+        $nrKSeFZNGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFZNGroup');
         $dom->appendChild($nrKSeFZNGroup);
 
-        $nrKSeFZN = $dom->createElement('NrKSeFZN');
+        $nrKSeFZN = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFZN');
         $nrKSeFZN->appendChild($dom->createTextNode((string) $this->nrKSeFZN->value));
 
         $nrKSeFZNGroup->appendChild($nrKSeFZN);
 
-        $nrFaZaliczkowej = $dom->createElement('NrFaZaliczkowej');
+        $nrFaZaliczkowej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrFaZaliczkowej');
         $nrFaZaliczkowej->appendChild($dom->createTextNode((string) $this->nrFaZaliczkowej));
 
         $nrKSeFZNGroup->appendChild($nrFaZaliczkowej);

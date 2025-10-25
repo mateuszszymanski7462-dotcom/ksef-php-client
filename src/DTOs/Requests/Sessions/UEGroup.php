@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KodUE;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrVatUE;
@@ -28,15 +29,15 @@ final class UEGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $ueGroup = $dom->createElement('UEGroup');
+        $ueGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'UEGroup');
         $dom->appendChild($ueGroup);
 
-        $kodUE = $dom->createElement('KodUE');
+        $kodUE = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KodUE');
         $kodUE->appendChild($dom->createTextNode((string) $this->kodUE));
 
         $ueGroup->appendChild($kodUE);
 
-        $nrVatUE = $dom->createElement('nrVatUE');
+        $nrVatUE = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'nrVatUE');
         $nrVatUE->appendChild($dom->createTextNode((string) $this->nrVatUE));
 
         $ueGroup->appendChild($nrVatUE);

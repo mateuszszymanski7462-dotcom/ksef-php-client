@@ -7,13 +7,14 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrPartiiTowaru;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\PodmiotPosredniczacy;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\WarunkiDostawy;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrPartiiTowaru;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\PodmiotPosredniczacy;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\WarunkiDostawy;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class WarunkiTransakcji extends AbstractDTO implements DomSerializableInterface
 {
@@ -78,7 +79,7 @@ final class WarunkiTransakcji extends AbstractDTO implements DomSerializableInte
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $warunkiTransakcji = $dom->createElement('WarunkiTransakcji');
+        $warunkiTransakcji = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WarunkiTransakcji');
         $dom->appendChild($warunkiTransakcji);
 
         if ( ! $this->umowy instanceof Optional) {
@@ -97,7 +98,7 @@ final class WarunkiTransakcji extends AbstractDTO implements DomSerializableInte
 
         if ( ! $this->nrPartiiTowaru instanceof Optional) {
             foreach ($this->nrPartiiTowaru as $nrPartiiTowaru) {
-                $_nrPartiiTowaru = $dom->createElement('NrPartiiTowaru');
+                $_nrPartiiTowaru = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrPartiiTowaru');
                 $_nrPartiiTowaru->appendChild($dom->createTextNode((string) $nrPartiiTowaru));
 
                 $warunkiTransakcji->appendChild($_nrPartiiTowaru);
@@ -105,7 +106,7 @@ final class WarunkiTransakcji extends AbstractDTO implements DomSerializableInte
         }
 
         if ($this->warunkiDostawy instanceof WarunkiDostawy) {
-            $warunkiDostawy = $dom->createElement('WarunkiDostawy');
+            $warunkiDostawy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WarunkiDostawy');
             $warunkiDostawy->appendChild($dom->createTextNode((string) $this->warunkiDostawy));
 
             $warunkiTransakcji->appendChild($warunkiDostawy);
@@ -129,7 +130,7 @@ final class WarunkiTransakcji extends AbstractDTO implements DomSerializableInte
         }
 
         if ($this->podmiotPosredniczacy instanceof PodmiotPosredniczacy) {
-            $podmiotPosredniczacy = $dom->createElement('PodmiotPosredniczacy');
+            $podmiotPosredniczacy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PodmiotPosredniczacy');
             $podmiotPosredniczacy->appendChild($dom->createTextNode((string) $this->podmiotPosredniczacy->value));
 
             $warunkiTransakcji->appendChild($podmiotPosredniczacy);

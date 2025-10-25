@@ -13,6 +13,7 @@ Main features:
 - Support for async batch send multiple invoices
 - Logical invoice structure mapped to DTOs and ValueObjects
 - Automatic access token refresh
+- Automatic XML document validation based on XSD schemas
 - CSR (Certificate Signing Request) handling
 - KSeF exception handling
 - QR codes generation
@@ -144,6 +145,7 @@ $client = (new ClientBuilder())
     ->withEncryptionKey(EncryptionKeyFactory::makeRandom()) // Required for invoice resources. Remember to save this value!
     ->withIdentifier('NIP_NUMBER') // Required for authorization. Optional otherwise
     ->withAsyncMaxConcurrency(8) // Optional. Maximum concurrent send operations during asynchronous sending
+    ->withValidateXml(true) // Optional. XML document validation based on XSD schemas
     ->build();
 ```
 

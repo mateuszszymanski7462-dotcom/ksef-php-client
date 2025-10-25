@@ -6,12 +6,13 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\ZnacznikZaplatyCzesciowej;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MinRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\ZnacznikZaplatyCzesciowej;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class ZaplataCzesciowaGroup extends AbstractDTO implements DomSerializableInterface
 {
@@ -42,10 +43,10 @@ final class ZaplataCzesciowaGroup extends AbstractDTO implements DomSerializable
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zaplataCzesciowaGroup = $dom->createElement('ZaplataCzesciowaGroup');
+        $zaplataCzesciowaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZaplataCzesciowaGroup');
         $dom->appendChild($zaplataCzesciowaGroup);
 
-        $znacznikZaplatyCzesciowej = $dom->createElement('ZnacznikZaplatyCzesciowej');
+        $znacznikZaplatyCzesciowej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZnacznikZaplatyCzesciowej');
         $znacznikZaplatyCzesciowej->appendChild($dom->createTextNode((string) $this->znacznikZaplatyCzesciowej->value));
 
         $zaplataCzesciowaGroup->appendChild($znacznikZaplatyCzesciowej);

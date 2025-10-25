@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\OpisPlatnosci;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\PlatnoscInna;
@@ -28,15 +29,15 @@ final class PlatnoscInnaGroup extends AbstractDTO implements DomSerializableInte
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $platnoscInnaGroup = $dom->createElement('PlatnoscInnaGroup');
+        $platnoscInnaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PlatnoscInnaGroup');
         $dom->appendChild($platnoscInnaGroup);
 
-        $platnoscInna = $dom->createElement('PlatnoscInna');
+        $platnoscInna = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PlatnoscInna');
         $platnoscInna->appendChild($dom->createTextNode((string) $this->platnoscInna->value));
 
         $platnoscInnaGroup->appendChild($platnoscInna);
 
-        $opisPlatnosci = $dom->createElement('OpisPlatnosci');
+        $opisPlatnosci = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisPlatnosci');
         $opisPlatnosci->appendChild($dom->createTextNode((string) $this->opisPlatnosci));
 
         $platnoscInnaGroup->appendChild($opisPlatnosci);

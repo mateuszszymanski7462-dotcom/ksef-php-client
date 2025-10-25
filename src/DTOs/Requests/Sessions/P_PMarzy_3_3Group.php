@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_PMarzy_3_3;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -25,10 +26,10 @@ final class P_PMarzy_3_3Group extends AbstractDTO implements DomSerializableInte
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_PMarzy_3_3Group = $dom->createElement('P_PMarzy_3_3Group');
+        $p_PMarzy_3_3Group = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_PMarzy_3_3Group');
         $dom->appendChild($p_PMarzy_3_3Group);
 
-        $p_PMarzy_3_3 = $dom->createElement('P_PMarzy_3_3');
+        $p_PMarzy_3_3 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_PMarzy_3_3');
         $p_PMarzy_3_3->appendChild($dom->createTextNode((string) $this->p_PMarzy_3_3->value));
 
         $p_PMarzy_3_3Group->appendChild($p_PMarzy_3_3);

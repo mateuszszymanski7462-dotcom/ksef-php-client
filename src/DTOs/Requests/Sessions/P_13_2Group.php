@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
+use N1ebieski\KSEFClient\Support\AbstractDTO;
+use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_13_2;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_14_2;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_14_2W;
-use N1ebieski\KSEFClient\Support\AbstractDTO;
-use N1ebieski\KSEFClient\Support\Optional;
 
 final class P_13_2Group extends AbstractDTO implements DomSerializableInterface
 {
@@ -32,21 +33,21 @@ final class P_13_2Group extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_13_2Group = $dom->createElement('P_13_2Group');
+        $p_13_2Group = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_2Group');
         $dom->appendChild($p_13_2Group);
 
-        $p_13_2 = $dom->createElement('P_13_2');
+        $p_13_2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_13_2');
         $p_13_2->appendChild($dom->createTextNode((string) $this->p_13_2));
 
         $p_13_2Group->appendChild($p_13_2);
 
-        $p_14_2 = $dom->createElement('P_14_2');
+        $p_14_2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_14_2');
         $p_14_2->appendChild($dom->createTextNode((string) $this->p_14_2));
 
         $p_13_2Group->appendChild($p_14_2);
 
         if ($this->p_14_2W instanceof P_14_2W) {
-            $p_14_2W = $dom->createElement('P_14_2W');
+            $p_14_2W = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_14_2W');
             $p_14_2W->appendChild($dom->createTextNode((string) $this->p_14_2W));
 
             $p_13_2Group->appendChild($p_14_2W);

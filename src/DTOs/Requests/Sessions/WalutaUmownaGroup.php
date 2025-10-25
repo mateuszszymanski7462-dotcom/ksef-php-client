@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KursUmowny;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\WalutaUmowna;
@@ -27,15 +28,15 @@ final class WalutaUmownaGroup extends AbstractDTO implements DomSerializableInte
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $walutaUmownaGroup = $dom->createElement('WalutaUmownaGroup');
+        $walutaUmownaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WalutaUmownaGroup');
         $dom->appendChild($walutaUmownaGroup);
 
-        $kursUmowny = $dom->createElement('KursUmowny');
+        $kursUmowny = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KursUmowny');
         $kursUmowny->appendChild($dom->createTextNode((string) $this->kursUmowny));
 
         $walutaUmownaGroup->appendChild($kursUmowny);
 
-        $walutaUmowna = $dom->createElement('WalutaUmowna');
+        $walutaUmowna = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'WalutaUmowna');
         $walutaUmowna->appendChild($dom->createTextNode((string) $this->walutaUmowna));
 
         $walutaUmownaGroup->appendChild($walutaUmowna);

@@ -12,13 +12,7 @@ enum XmlNamespace: string
 
     case Xades = 'http://uri.etsi.org/01903/v1.3.2#';
 
-    case KsefOnlineAuthRequest = 'http://ksef.mf.gov.pl/schema/gtw/svc/online/auth/request/2021/10/01/0001';
-
-    case KsefTypes = 'http://ksef.mf.gov.pl/schema/gtw/svc/types/2021/10/01/0001';
-
-    case KsefOnlineTypes = 'http://ksef.mf.gov.pl/schema/gtw/svc/online/types/2021/10/01/0001';
-
     case Xsi = 'http://www.w3.org/2001/XMLSchema-instance';
 
-    case Etd = 'http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2022/01/05/eD/DefinicjeTypy/';
+    case Fa3 = 'http://crd.gov.pl/wzor/2025/06/25/13775/';
 }

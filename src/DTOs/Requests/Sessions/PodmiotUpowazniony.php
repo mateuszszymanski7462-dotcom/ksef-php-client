@@ -6,12 +6,13 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrEORI;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\RolaPU;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrEORI;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\RolaPU;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class PodmiotUpowazniony extends AbstractDTO implements DomSerializableInterface
 {
@@ -49,11 +50,11 @@ final class PodmiotUpowazniony extends AbstractDTO implements DomSerializableInt
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $podmiotUpowazniony = $dom->createElement('PodmiotUpowazniony');
+        $podmiotUpowazniony = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PodmiotUpowazniony');
         $dom->appendChild($podmiotUpowazniony);
 
         if ($this->nrEORI instanceof NrEORI) {
-            $nrEORI = $dom->createElement('NrEORI');
+            $nrEORI = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrEORI');
             $nrEORI->appendChild($dom->createTextNode((string) $this->nrEORI));
             $podmiotUpowazniony->appendChild($nrEORI);
         }
@@ -80,7 +81,7 @@ final class PodmiotUpowazniony extends AbstractDTO implements DomSerializableInt
             }
         }
 
-        $rolaPU = $dom->createElement('RolaPU');
+        $rolaPU = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RolaPU');
         $rolaPU->appendChild($dom->createTextNode((string) $this->rolaPU->value));
 
         $podmiotUpowazniony->appendChild($rolaPU);

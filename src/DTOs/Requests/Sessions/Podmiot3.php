@@ -7,14 +7,15 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\IDNabywcy;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrEORI;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKlienta;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Udzial;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\IDNabywcy;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrEORI;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKlienta;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Udzial;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Podmiot3 extends AbstractDTO implements DomSerializableInterface
 {
@@ -57,17 +58,17 @@ final class Podmiot3 extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $podmiot3 = $dom->createElement('Podmiot3');
+        $podmiot3 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Podmiot3');
         $dom->appendChild($podmiot3);
 
         if ($this->idNabywcy instanceof IDNabywcy) {
-            $idNabywcy = $dom->createElement('IDNabywcy');
+            $idNabywcy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IDNabywcy');
             $idNabywcy->appendChild($dom->createTextNode((string) $this->idNabywcy));
             $podmiot3->appendChild($idNabywcy);
         }
 
         if ($this->nrEORI instanceof NrEORI) {
-            $nrEORI = $dom->createElement('NrEORI');
+            $nrEORI = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrEORI');
             $nrEORI->appendChild($dom->createTextNode((string) $this->nrEORI));
             $podmiot3->appendChild($nrEORI);
         }
@@ -101,13 +102,13 @@ final class Podmiot3 extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->udzial instanceof Udzial) {
-            $udzial = $dom->createElement('Udzial');
+            $udzial = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Udzial');
             $udzial->appendChild($dom->createTextNode((string) $this->udzial));
             $podmiot3->appendChild($udzial);
         }
 
         if ($this->nrKlienta instanceof NrKlienta) {
-            $nrKlienta = $dom->createElement('NrKlienta');
+            $nrKlienta = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKlienta');
             $nrKlienta->appendChild($dom->createTextNode((string) $this->nrKlienta));
             $podmiot3->appendChild($nrKlienta);
         }

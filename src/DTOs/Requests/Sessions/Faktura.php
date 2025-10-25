@@ -64,9 +64,7 @@ final class Faktura extends AbstractDTO implements XmlSerializableInterface, Dom
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $faktura = $dom->createElementNS($this->naglowek->wariantFormularza->getTargetNamespace(), 'Faktura');
-        $faktura->setAttribute('xmlns:xsi', (string) XmlNamespace::Xsi->value);
-        $faktura->setAttribute('xmlns:etd', (string) XmlNamespace::Etd->value);
+        $faktura = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Faktura');
 
         $dom->appendChild($faktura);
 

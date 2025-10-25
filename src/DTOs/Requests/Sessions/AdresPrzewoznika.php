@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\AdresL1;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\AdresL2;
@@ -31,27 +32,27 @@ final class AdresPrzewoznika extends AbstractDTO implements DomSerializableInter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $adresPrzewoznika = $dom->createElement('AdresPrzewoznika');
+        $adresPrzewoznika = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'AdresPrzewoznika');
         $dom->appendChild($adresPrzewoznika);
 
-        $kodKraju = $dom->createElement('KodKraju');
+        $kodKraju = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KodKraju');
         $kodKraju->appendChild($dom->createTextNode((string) $this->kodKraju));
 
         $adresPrzewoznika->appendChild($kodKraju);
 
-        $adresL1 = $dom->createElement('AdresL1');
+        $adresL1 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'AdresL1');
         $adresL1->appendChild($dom->createTextNode((string) $this->adresL1));
 
         $adresPrzewoznika->appendChild($adresL1);
 
         if ($this->adresL2 instanceof AdresL2) {
-            $adresL2 = $dom->createElement('AdresL2');
+            $adresL2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'AdresL2');
             $adresL2->appendChild($dom->createTextNode((string) $this->adresL2));
             $adresPrzewoznika->appendChild($adresL2);
         }
 
         if ($this->gln instanceof GLN) {
-            $gln = $dom->createElement('GLN');
+            $gln = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'GLN');
             $gln->appendChild($dom->createTextNode((string) $this->gln));
             $adresPrzewoznika->appendChild($gln);
         }

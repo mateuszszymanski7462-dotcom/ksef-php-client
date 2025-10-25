@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_22D1;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_22D;
@@ -28,16 +29,16 @@ final class P_22DGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_22DGroup = $dom->createElement('P_22DGroup');
+        $p_22DGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22DGroup');
         $dom->appendChild($p_22DGroup);
 
-        $p_22D = $dom->createElement('P_22D');
+        $p_22D = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22D');
         $p_22D->appendChild($dom->createTextNode((string) $this->p_22D));
 
         $p_22DGroup->appendChild($p_22D);
 
         if ($this->p_22D1 instanceof P_22D1) {
-            $p_22D1 = $dom->createElement('P_22D1');
+            $p_22D1 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22D1');
             $p_22D1->appendChild($dom->createTextNode((string) $this->p_22D1));
 
             $p_22DGroup->appendChild($p_22D1);

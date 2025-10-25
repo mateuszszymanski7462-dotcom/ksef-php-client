@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_22A;
@@ -45,49 +46,49 @@ final class NowySrodekTransportu extends AbstractDTO implements DomSerializableI
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $nowySrodekTransportu = $dom->createElement('NowySrodekTransportu');
+        $nowySrodekTransportu = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NowySrodekTransportu');
         $dom->appendChild($nowySrodekTransportu);
 
-        $p_22A = $dom->createElement('P_22A');
+        $p_22A = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22A');
         $p_22A->appendChild($dom->createTextNode((string) $this->p_22A));
 
         $nowySrodekTransportu->appendChild($p_22A);
 
-        $p_nrWierszaNST = $dom->createElement('P_NrWierszaNST');
+        $p_nrWierszaNST = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_NrWierszaNST');
         $p_nrWierszaNST->appendChild($dom->createTextNode((string) $this->p_nrWierszaNST));
 
         $nowySrodekTransportu->appendChild($p_nrWierszaNST);
 
         if ($this->p_22BMK instanceof P_22BMK) {
-            $p_22BMK = $dom->createElement('P_22BMK');
+            $p_22BMK = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22BMK');
             $p_22BMK->appendChild($dom->createTextNode((string) $this->p_22BMK));
 
             $nowySrodekTransportu->appendChild($p_22BMK);
         }
 
         if ($this->p_22BMD instanceof P_22BMD) {
-            $p_22BMD = $dom->createElement('P_22BMD');
+            $p_22BMD = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22BMD');
             $p_22BMD->appendChild($dom->createTextNode((string) $this->p_22BMD));
 
             $nowySrodekTransportu->appendChild($p_22BMD);
         }
 
         if ($this->p_22BK instanceof P_22BK) {
-            $p_22BK = $dom->createElement('P_22BK');
+            $p_22BK = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22BK');
             $p_22BK->appendChild($dom->createTextNode((string) $this->p_22BK));
 
             $nowySrodekTransportu->appendChild($p_22BK);
         }
 
         if ($this->p_22BNR instanceof P_22BNR) {
-            $p_22BNR = $dom->createElement('P_22BNR');
+            $p_22BNR = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22BNR');
             $p_22BNR->appendChild($dom->createTextNode((string) $this->p_22BNR));
 
             $nowySrodekTransportu->appendChild($p_22BNR);
         }
 
         if ($this->p_22BRP instanceof P_22BRP) {
-            $p_22BRP = $dom->createElement('P_22BRP');
+            $p_22BRP = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22BRP');
             $p_22BRP->appendChild($dom->createTextNode((string) $this->p_22BRP));
 
             $nowySrodekTransportu->appendChild($p_22BRP);

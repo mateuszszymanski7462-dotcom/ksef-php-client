@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NazwaBanku;
@@ -28,7 +29,7 @@ final class RachunekBankowy extends AbstractDTO implements DomSerializableInterf
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $rachunekBankowy = $dom->createElement('RachunekBankowy');
+        $rachunekBankowy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RachunekBankowy');
         $dom->appendChild($rachunekBankowy);
 
         /** @var DOMElement $nrRBGroup */
@@ -39,21 +40,21 @@ final class RachunekBankowy extends AbstractDTO implements DomSerializableInterf
         }
 
         if ($this->rachunekWlasnyBanku instanceof RachunekWlasnyBanku) {
-            $rachunekWlasnyBanku = $dom->createElement('RachunekWlasnyBanku');
+            $rachunekWlasnyBanku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RachunekWlasnyBanku');
             $rachunekWlasnyBanku->appendChild($dom->createTextNode((string) $this->rachunekWlasnyBanku->value));
 
             $rachunekBankowy->appendChild($rachunekWlasnyBanku);
         }
 
         if ($this->nazwaBanku instanceof NazwaBanku) {
-            $nazwaBanku = $dom->createElement('NazwaBanku');
+            $nazwaBanku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NazwaBanku');
             $nazwaBanku->appendChild($dom->createTextNode((string) $this->nazwaBanku));
 
             $rachunekBankowy->appendChild($nazwaBanku);
         }
 
         if ($this->opisRachunku instanceof OpisRachunku) {
-            $opisRachunku = $dom->createElement('OpisRachunku');
+            $opisRachunku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisRachunku');
             $opisRachunku->appendChild($dom->createTextNode((string) $this->opisRachunku));
 
             $rachunekBankowy->appendChild($opisRachunku);

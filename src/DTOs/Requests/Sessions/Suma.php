@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\SKom;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -40,11 +41,11 @@ final class Suma extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $suma = $dom->createElement('Suma');
+        $suma = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Suma');
         $dom->appendChild($suma);
 
         foreach ($this->sKom as $sKom) {
-            $_sKom = $dom->createElement('SKom');
+            $_sKom = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'SKom');
             $_sKom->appendChild($dom->createTextNode((string) $sKom));
 
             $suma->appendChild($_sKom);

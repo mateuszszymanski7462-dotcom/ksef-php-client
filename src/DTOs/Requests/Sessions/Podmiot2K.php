@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\IDNabywcy;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -30,7 +31,7 @@ final class Podmiot2K extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $podmiot2 = $dom->createElement('Podmiot2K');
+        $podmiot2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Podmiot2K');
         $dom->appendChild($podmiot2);
 
         $daneIdentyfikacyjne = $dom->importNode($this->daneIdentyfikacyjne->toDom()->documentElement, true);
@@ -44,7 +45,7 @@ final class Podmiot2K extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->idNabywcy instanceof IDNabywcy) {
-            $idNabywcy = $dom->createElement('IDNabywcy');
+            $idNabywcy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IDNabywcy');
             $idNabywcy->appendChild($dom->createTextNode((string) $this->idNabywcy));
             $podmiot2->appendChild($idNabywcy);
         }

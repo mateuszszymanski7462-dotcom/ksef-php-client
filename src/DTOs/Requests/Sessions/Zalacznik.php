@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
@@ -39,7 +40,7 @@ final class Zalacznik extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zalacznik = $dom->createElement('Zalacznik');
+        $zalacznik = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Zalacznik');
         $dom->appendChild($zalacznik);
 
         foreach ($this->blokDanych as $blokDanych) {

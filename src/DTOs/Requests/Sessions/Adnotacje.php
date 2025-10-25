@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_16;
@@ -40,25 +41,25 @@ final class Adnotacje extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $adnotacje = $dom->createElement('Adnotacje');
+        $adnotacje = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Adnotacje');
         $dom->appendChild($adnotacje);
 
-        $p_16 = $dom->createElement('P_16');
+        $p_16 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_16');
         $p_16->appendChild($dom->createTextNode((string) $this->p_16->value));
 
         $adnotacje->appendChild($p_16);
 
-        $p_17 = $dom->createElement('P_17');
+        $p_17 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_17');
         $p_17->appendChild($dom->createTextNode((string) $this->p_17->value));
 
         $adnotacje->appendChild($p_17);
 
-        $p_18 = $dom->createElement('P_18');
+        $p_18 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_18');
         $p_18->appendChild($dom->createTextNode((string) $this->p_18->value));
 
         $adnotacje->appendChild($p_18);
 
-        $p_18A = $dom->createElement('P_18A');
+        $p_18A = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_18A');
         $p_18A->appendChild($dom->createTextNode((string) $this->p_18A->value));
 
         $adnotacje->appendChild($p_18A);
@@ -71,7 +72,7 @@ final class Adnotacje extends AbstractDTO implements DomSerializableInterface
 
         $adnotacje->appendChild($noweSrodkiTransportu);
 
-        $p_23 = $dom->createElement('P_23');
+        $p_23 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_23');
         $p_23->appendChild($dom->createTextNode((string) $this->p_23->value));
 
         $adnotacje->appendChild($p_23);

@@ -38,7 +38,7 @@ final class ClientResource extends AbstractResource implements ClientResourceInt
     public function __construct(
         private HttpClientInterface $client,
         private Config $config,
-        private readonly ?LoggerInterface $logger = null
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -116,7 +116,7 @@ final class ClientResource extends AbstractResource implements ClientResourceInt
     {
         $this->refreshTokenIfExpired();
 
-        return new AuthResource($this->client);
+        return new AuthResource($this->client, $this->config, $this->logger);
     }
 
     public function limits(): LimitsResourceInterface

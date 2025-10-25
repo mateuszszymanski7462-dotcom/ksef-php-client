@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_19;
@@ -27,10 +28,10 @@ final class P_19Group extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_19Group = $dom->createElement('P_19Group');
+        $p_19Group = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_19Group');
         $dom->appendChild($p_19Group);
 
-        $p_19 = $dom->createElement('P_19');
+        $p_19 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_19');
         $p_19->appendChild($dom->createTextNode((string) $this->p_19->value));
 
         $p_19Group->appendChild($p_19);

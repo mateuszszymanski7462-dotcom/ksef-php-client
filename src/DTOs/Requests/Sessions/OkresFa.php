@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_6_Do;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_6_Od;
@@ -28,15 +29,15 @@ final class OkresFa extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $okresFa = $dom->createElement('OkresFa');
+        $okresFa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OkresFa');
         $dom->appendChild($okresFa);
 
-        $p_6_Od = $dom->createElement('P_6_Od');
+        $p_6_Od = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_6_Od');
         $p_6_Od->appendChild($dom->createTextNode((string) $this->p_6_Od));
 
         $okresFa->appendChild($p_6_Od);
 
-        $p_6_Do = $dom->createElement('P_6_Do');
+        $p_6_Do = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_6_Do');
         $p_6_Do->appendChild($dom->createTextNode((string) $this->p_6_Do));
 
         $okresFa->appendChild($p_6_Do);

@@ -8,6 +8,7 @@ use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class PMarzy extends AbstractDTO implements DomSerializableInterface
 {
@@ -21,7 +22,7 @@ final class PMarzy extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $pMarzy = $dom->createElement('PMarzy');
+        $pMarzy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'PMarzy');
         $dom->appendChild($pMarzy);
 
         /** @var DOMElement $p_PMarzyGroup */

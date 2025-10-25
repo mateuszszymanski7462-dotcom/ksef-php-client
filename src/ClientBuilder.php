@@ -77,6 +77,8 @@ final class ClientBuilder
 
     private int $asyncMaxConcurrency = 8;
 
+    private bool $validateXml = true;
+
     public function __construct()
     {
         $this->httpClient = ClientFactory::make(Psr18ClientDiscovery::find());
@@ -224,6 +226,13 @@ final class ClientBuilder
         return $this;
     }
 
+    public function withValidateXml(bool $validateXml): self
+    {
+        $this->validateXml = $validateXml;
+
+        return $this;
+    }
+
     /**
      * @param null|LogLevel::* $level
      */
@@ -247,6 +256,7 @@ final class ClientBuilder
         $config = new Config(
             baseUri: new BaseUri($this->apiUrl->value),
             asyncMaxConcurrency: $this->asyncMaxConcurrency,
+            validateXml: $this->validateXml,
             accessToken: $this->accessToken,
             refreshToken: $this->refreshToken,
             encryptionKey: $this->encryptionKey,

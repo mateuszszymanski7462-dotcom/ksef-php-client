@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\KursWalutyZW;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_15Z;
@@ -31,21 +32,21 @@ final class ZaliczkaCzesciowa extends AbstractDTO implements DomSerializableInte
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zaliczkaCzesciowa = $dom->createElement('ZaliczkaCzesciowa');
+        $zaliczkaCzesciowa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZaliczkaCzesciowa');
         $dom->appendChild($zaliczkaCzesciowa);
 
-        $p_6Z = $dom->createElement('P_6Z');
+        $p_6Z = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_6Z');
         $p_6Z->appendChild($dom->createTextNode((string) $this->p_6Z));
 
         $zaliczkaCzesciowa->appendChild($p_6Z);
 
-        $p_15Z = $dom->createElement('P_15Z');
+        $p_15Z = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_15Z');
         $p_15Z->appendChild($dom->createTextNode((string) $this->p_15Z));
 
         $zaliczkaCzesciowa->appendChild($p_15Z);
 
         if ($this->kursWalutyZW instanceof KursWalutyZW) {
-            $kursWalutyZW = $dom->createElement('KursWalutyZW');
+            $kursWalutyZW = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'KursWalutyZW');
             $kursWalutyZW->appendChild($dom->createTextNode((string) $this->kursWalutyZW));
 
             $zaliczkaCzesciowa->appendChild($kursWalutyZW);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Nazwa;
@@ -24,7 +25,7 @@ final class Podmiot2KDaneIdentyfikacyjne extends AbstractDTO implements DomSeria
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $daneIdentyfikacyjne = $dom->createElement('DaneIdentyfikacyjne');
+        $daneIdentyfikacyjne = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DaneIdentyfikacyjne');
         $dom->appendChild($daneIdentyfikacyjne);
 
         /** @var DOMElement $idGroup */
@@ -35,7 +36,7 @@ final class Podmiot2KDaneIdentyfikacyjne extends AbstractDTO implements DomSeria
         }
 
         if ($this->nazwa instanceof Nazwa) {
-            $nazwa = $dom->createElement('Nazwa');
+            $nazwa = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Nazwa');
             $nazwa->appendChild($dom->createTextNode((string) $this->nazwa));
 
             $daneIdentyfikacyjne->appendChild($nazwa);

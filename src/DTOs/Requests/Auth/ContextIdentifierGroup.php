@@ -13,6 +13,7 @@ use N1ebieski\KSEFClient\ValueObjects\InternalId;
 use N1ebieski\KSEFClient\ValueObjects\NIP;
 use N1ebieski\KSEFClient\ValueObjects\NipVatUe;
 use N1ebieski\KSEFClient\ValueObjects\PeppolId;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class ContextIdentifierGroup extends AbstractDTO implements DomSerializableInterface, BodyInterface
 {
@@ -44,7 +45,7 @@ final class ContextIdentifierGroup extends AbstractDTO implements DomSerializabl
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $contextIdentifierGroup = $dom->createElement('ContextIdentifierGroup');
+        $contextIdentifierGroup = $dom->createElementNS((string) XmlNamespace::Auth->value, 'ContextIdentifierGroup');
         $dom->appendChild($contextIdentifierGroup);
 
         /** @var DOMElement $identifierGroup */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKSeFFaZaliczkowej;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -24,10 +25,10 @@ final class NrKSeFFaZaliczkowejGroup extends AbstractDTO implements DomSerializa
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $nrKSeFFaZaliczkowejGroup = $dom->createElement('NrKSeFFaZaliczkowejGroup');
+        $nrKSeFFaZaliczkowejGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFFaZaliczkowejGroup');
         $dom->appendChild($nrKSeFFaZaliczkowejGroup);
 
-        $nrKSeFFaZaliczkowej = $dom->createElement('NrKSeFFaZaliczkowej');
+        $nrKSeFFaZaliczkowej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFFaZaliczkowej');
         $nrKSeFFaZaliczkowej->appendChild($dom->createTextNode($this->nrKSeFFaZaliczkowej->value));
 
         $nrKSeFFaZaliczkowejGroup->appendChild($nrKSeFFaZaliczkowej);

@@ -6,12 +6,13 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Opis;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MinRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\Opis;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Tabela extends AbstractDTO implements DomSerializableInterface
 {
@@ -55,7 +56,7 @@ final class Tabela extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $tabela = $dom->createElement('Tabela');
+        $tabela = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Tabela');
         $dom->appendChild($tabela);
 
         if ( ! $this->tMetaDane instanceof Optional) {
@@ -67,7 +68,7 @@ final class Tabela extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->opis instanceof Opis) {
-            $opis = $dom->createElement('Opis');
+            $opis = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Opis');
             $opis->appendChild($dom->createTextNode((string) $this->opis));
 
             $tabela->appendChild($opis);

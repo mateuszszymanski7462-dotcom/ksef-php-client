@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\DoRozliczenia;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -24,10 +25,10 @@ final class DoRozliczeniaGroup extends AbstractDTO implements DomSerializableInt
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $doRozliczeniaGroup = $dom->createElement('DoRozliczeniaGroup');
+        $doRozliczeniaGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DoRozliczeniaGroup');
         $dom->appendChild($doRozliczeniaGroup);
 
-        $doRozliczenia = $dom->createElement('DoRozliczenia');
+        $doRozliczenia = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'DoRozliczenia');
         $doRozliczenia->appendChild($dom->createTextNode((string) $this->doRozliczenia->value));
 
         $doRozliczeniaGroup->appendChild($doRozliczenia);

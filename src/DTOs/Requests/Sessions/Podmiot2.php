@@ -15,6 +15,7 @@ use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\IDNabywcy;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\JST;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrEORI;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKlienta;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Podmiot2 extends AbstractDTO implements DomSerializableInterface
 {
@@ -59,11 +60,11 @@ final class Podmiot2 extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $podmiot2 = $dom->createElement('Podmiot2');
+        $podmiot2 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Podmiot2');
         $dom->appendChild($podmiot2);
 
         if ($this->nrEORI instanceof NrEORI) {
-            $nrEORI = $dom->createElement('NrEORI');
+            $nrEORI = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrEORI');
             $nrEORI->appendChild($dom->createTextNode((string) $this->nrEORI));
 
             $podmiot2->appendChild($nrEORI);
@@ -93,25 +94,25 @@ final class Podmiot2 extends AbstractDTO implements DomSerializableInterface
         }
 
         if ($this->nrKlienta instanceof NrKlienta) {
-            $nrKlienta = $dom->createElement('NrKlienta');
+            $nrKlienta = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKlienta');
             $nrKlienta->appendChild($dom->createTextNode((string) $this->nrKlienta));
 
             $podmiot2->appendChild($nrKlienta);
         }
 
         if ($this->idNabywcy instanceof IDNabywcy) {
-            $idNabywcy = $dom->createElement('IDNabywcy');
+            $idNabywcy = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'IDNabywcy');
             $idNabywcy->appendChild($dom->createTextNode((string) $this->idNabywcy));
 
             $podmiot2->appendChild($idNabywcy);
         }
 
-        $jst = $dom->createElement('JST');
+        $jst = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'JST');
         $jst->appendChild($dom->createTextNode((string) $this->jst->value));
 
         $podmiot2->appendChild($jst);
 
-        $gv = $dom->createElement('GV');
+        $gv = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'GV');
         $gv->appendChild($dom->createTextNode((string) $this->gv->value));
 
         $podmiot2->appendChild($gv);

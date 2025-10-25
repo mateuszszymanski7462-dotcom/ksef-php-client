@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\P_22B4;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
@@ -24,10 +25,10 @@ final class P_22B4Group extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $p_22B4Group = $dom->createElement('P_22B4Group');
+        $p_22B4Group = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22B4Group');
         $dom->appendChild($p_22B4Group);
 
-        $p_22B4 = $dom->createElement('P_22B4');
+        $p_22B4 = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'P_22B4');
         $p_22B4->appendChild($dom->createTextNode($this->p_22B4->value));
 
         $p_22B4Group->appendChild($p_22B4);

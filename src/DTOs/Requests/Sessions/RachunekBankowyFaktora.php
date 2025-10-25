@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NazwaBanku;
@@ -28,7 +29,7 @@ final class RachunekBankowyFaktora extends AbstractDTO implements DomSerializabl
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $rachunekBankowyFaktora = $dom->createElement('RachunekBankowyFaktora');
+        $rachunekBankowyFaktora = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RachunekBankowyFaktora');
         $dom->appendChild($rachunekBankowyFaktora);
 
         /** @var DOMElement $nrRBGroup */
@@ -39,21 +40,21 @@ final class RachunekBankowyFaktora extends AbstractDTO implements DomSerializabl
         }
 
         if ($this->rachunekWlasnyBanku instanceof RachunekWlasnyBanku) {
-            $rachunekWlasnyBanku = $dom->createElement('RachunekWlasnyBanku');
+            $rachunekWlasnyBanku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'RachunekWlasnyBanku');
             $rachunekWlasnyBanku->appendChild($dom->createTextNode((string) $this->rachunekWlasnyBanku->value));
 
             $rachunekBankowyFaktora->appendChild($rachunekWlasnyBanku);
         }
 
         if ($this->nazwaBanku instanceof NazwaBanku) {
-            $nazwaBanku = $dom->createElement('NazwaBanku');
+            $nazwaBanku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NazwaBanku');
             $nazwaBanku->appendChild($dom->createTextNode((string) $this->nazwaBanku));
 
             $rachunekBankowyFaktora->appendChild($nazwaBanku);
         }
 
         if ($this->opisRachunku instanceof OpisRachunku) {
-            $opisRachunku = $dom->createElement('OpisRachunku');
+            $opisRachunku = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'OpisRachunku');
             $opisRachunku->appendChild($dom->createTextNode((string) $this->opisRachunku));
 
             $rachunekBankowyFaktora->appendChild($opisRachunku);

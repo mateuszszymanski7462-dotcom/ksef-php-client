@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
+use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKSeF;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\NrKSeFFaKorygowanej;
-use N1ebieski\KSEFClient\Support\AbstractDTO;
 
 final class NrKSeFGroup extends AbstractDTO implements DomSerializableInterface
 {
@@ -27,15 +28,15 @@ final class NrKSeFGroup extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $nrKSeFGroup = $dom->createElement('NrKSeFGroup');
+        $nrKSeFGroup = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFGroup');
         $dom->appendChild($nrKSeFGroup);
 
-        $nrKSeF = $dom->createElement('NrKSeF');
+        $nrKSeF = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeF');
         $nrKSeF->appendChild($dom->createTextNode((string) $this->nrKSeF->value));
 
         $nrKSeFGroup->appendChild($nrKSeF);
 
-        $nrKSeFFaKorygowanej = $dom->createElement('NrKSeFFaKorygowanej');
+        $nrKSeFFaKorygowanej = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'NrKSeFFaKorygowanej');
         $nrKSeFFaKorygowanej->appendChild($dom->createTextNode((string) $this->nrKSeFFaKorygowanej));
 
         $nrKSeFGroup->appendChild($nrKSeFFaKorygowanej);

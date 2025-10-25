@@ -6,12 +6,13 @@ namespace N1ebieski\KSEFClient\DTOs\Requests\Sessions;
 
 use DOMDocument;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
-use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\ZNaglowek;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MaxRule;
 use N1ebieski\KSEFClient\Validator\Rules\Array\MinRule;
 use N1ebieski\KSEFClient\Validator\Validator;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Sessions\ZNaglowek;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class BlokDanych extends AbstractDTO implements DomSerializableInterface
 {
@@ -55,11 +56,11 @@ final class BlokDanych extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $blokDanych = $dom->createElement('BlokDanych');
+        $blokDanych = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'BlokDanych');
         $dom->appendChild($blokDanych);
 
         if ($this->zNaglowek instanceof ZNaglowek) {
-            $zNaglowek = $dom->createElement('ZNaglowek');
+            $zNaglowek = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'ZNaglowek');
             $zNaglowek->appendChild($dom->createTextNode((string) $this->zNaglowek));
 
             $blokDanych->appendChild($zNaglowek);

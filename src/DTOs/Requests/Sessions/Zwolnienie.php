@@ -8,6 +8,7 @@ use DOMDocument;
 use DOMElement;
 use N1ebieski\KSEFClient\Contracts\DomSerializableInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
+use N1ebieski\KSEFClient\ValueObjects\Requests\XmlNamespace;
 
 final class Zwolnienie extends AbstractDTO implements DomSerializableInterface
 {
@@ -21,7 +22,7 @@ final class Zwolnienie extends AbstractDTO implements DomSerializableInterface
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $zwolnienie = $dom->createElement('Zwolnienie');
+        $zwolnienie = $dom->createElementNS((string) XmlNamespace::Fa3->value, 'Zwolnienie');
         $dom->appendChild($zwolnienie);
 
         /** @var DOMElement $p_19Group */
