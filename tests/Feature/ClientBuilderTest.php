@@ -20,14 +20,12 @@ use N1ebieski\KSEFClient\ValueObjects\RefreshToken;
 /**
  * @return array<string, array<PrivateKeyType>>
  */
-dataset('privateKeyTypeProvider', function (): array {
-    return [
-        'RSA' => [PrivateKeyType::RSA],
-        'EC' => [PrivateKeyType::EC],
-    ];
-});
+dataset('privateKeyTypeProvider', fn(): array => [
+    'RSA' => [PrivateKeyType::RSA],
+    'EC' => [PrivateKeyType::EC],
+]);
 
-test('auto authorization via certificate .p12', function () {
+test('auto authorization via certificate .p12', function (): void {
     /** @var AbstractTestCase $this */
     $client = $this->createClient();
 
@@ -43,7 +41,7 @@ test('auto authorization via certificate .p12', function () {
     $this->revokeCurrentSession();
 });
 
-test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $privateKeyType) {
+test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $privateKeyType): void {
     /** @var AbstractTestCase $this */
     $client = $this->createClient();
 
@@ -82,7 +80,7 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
         'certificateSerialNumbers' => [$statusResponse->certificateSerialNumber]
     ])->object();
 
-    $certificate = base64_decode($retrieveResponse->certificates[0]->certificate);
+    $certificate = base64_decode((string) $retrieveResponse->certificates[0]->certificate);
 
     $certificateToPem = (new ConvertDerToPemHandler())->handle(
         new ConvertDerToPemAction($certificate, 'CERTIFICATE')
@@ -121,7 +119,7 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
     $this->revokeCurrentSession();
 })->with('privateKeyTypeProvider');
 
-test('auto authorization via KSEF Token', function () {
+test('auto authorization via KSEF Token', function (): void {
     /** @var AbstractTestCase $this */
     $client = $this->createClient();
 

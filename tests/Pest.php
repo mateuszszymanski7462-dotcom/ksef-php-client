@@ -37,7 +37,7 @@ use Psr\Http\Message\StreamInterface;
 
 uses(UnitAbstractTestCase::class)->in('Unit');
 uses(FeatureAbstractTestCase::class)
-    ->beforeAll(function () {
+    ->beforeAll(function (): void {
         $client = (new ClientBuilder())
             ->withMode(Mode::Test)
             ->build();
@@ -49,7 +49,7 @@ uses(FeatureAbstractTestCase::class)
             'description' => 'testing',
         ]);
     })
-    ->afterAll(function () {
+    ->afterAll(function (): void {
         $client = (new ClientBuilder())
             ->withMode(Mode::Test)
             ->build();

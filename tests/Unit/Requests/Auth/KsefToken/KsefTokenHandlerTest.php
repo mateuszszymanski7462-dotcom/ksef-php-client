@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use function N1ebieski\KSEFClient\Tests\getClientStub;
 use N1ebieski\KSEFClient\Requests\Auth\KsefToken\KsefTokenRequest;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Auth\KsefToken\KsefTokenRequestFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Auth\KsefToken\KsefTokenResponseFixture;
-
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Error\ErrorResponseFixture;
+
+use function N1ebieski\KSEFClient\Tests\getClientStub;
 
 /**
  * @return array<string, array{KsefTokenRequestFixture, KsefTokenResponseFixture}>
