@@ -12,6 +12,7 @@ abstract class AbstractTestCase extends TestCase
 {
     public function createClient(): ClientResourceInterface
     {
+        /** @var array<string, string> $_ENV */
         return (new ClientBuilder())
             ->withMode(Mode::Test)
             ->withIdentifier($_ENV['NIP'])

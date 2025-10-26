@@ -17,6 +17,8 @@ use N1ebieski\KSEFClient\ValueObjects\Mode;
 use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 use N1ebieski\KSEFClient\ValueObjects\RefreshToken;
 
+/** @var AbstractTestCase $this */
+
 /**
  * @return array<string, array<PrivateKeyType>>
  */
@@ -42,7 +44,10 @@ test('auto authorization via certificate .p12', function (): void {
 });
 
 test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $privateKeyType): void {
-    /** @var AbstractTestCase $this */
+    /**
+     * @var AbstractTestCase $this
+     * @var array<string, string> $_ENV
+     */
     $client = $this->createClient();
 
     $dataResponse = $client->certificates()->enrollments()->data()->json();
@@ -53,13 +58,16 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
 
     $csrToDer = (new ConvertPemToDerHandler())->handle(new ConvertPemToDerAction($csr->raw));
 
+    /** @var object{referenceNumber: string} */
     $sendResponse = $client->certificates()->enrollments()->send([
         'certificateName' => 'testing',
         'certificateType' => 'Authentication',
         'csr' => base64_encode($csrToDer),
     ])->object();
 
+    /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
     $statusResponse = Utility::retry(function () use ($client, $sendResponse) {
+        /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
         $statusResponse = $client->certificates()->enrollments()->status([
             'referenceNumber' => $sendResponse->referenceNumber
         ])->object();
@@ -76,6 +84,7 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
         }
     });
 
+    /** @var object{certificates: array<object{certificate: string}>} */
     $retrieveResponse = $client->certificates()->retrieve([
         'certificateSerialNumbers' => [$statusResponse->certificateSerialNumber]
     ])->object();
@@ -88,7 +97,7 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
 
     $certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
         new ConvertCertificateToPkcs12Action(
-            certificate: new Certificate($certificateToPem, [], $csr->privateKey),
+            certificate: new Certificate($certificateToPem, [], $csr->privateKey), //@phpstan-ignore-line
             passphrase: $_ENV['KSEF_AUTH_CERTIFICATE_PASSPHRASE']
         )
     );
@@ -120,9 +129,13 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
 })->with('privateKeyTypeProvider');
 
 test('auto authorization via KSEF Token', function (): void {
-    /** @var AbstractTestCase $this */
+    /**
+     * @var AbstractTestCase $this
+     * @var array<string, string> $_ENV
+     */
     $client = $this->createClient();
 
+    /** @var object{token: string, referenceNumber: string} */
     $response = $client->tokens()->create([
         'permissions' => [
             'InvoiceRead',
