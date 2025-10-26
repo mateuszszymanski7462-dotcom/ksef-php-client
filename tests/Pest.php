@@ -37,17 +37,23 @@ use Psr\Http\Message\StreamInterface;
 
 uses(UnitAbstractTestCase::class)->in('Unit');
 uses(FeatureAbstractTestCase::class)
-    ->beforeAll(function (): void {
+    ->beforeEach(function (): void {
         $client = (new ClientBuilder())
             ->withMode(Mode::Test)
             ->build();
 
-        $client->testdata()->person()->create([
-            'nip' => $_ENV['NIP'],
-            'pesel' => $_ENV['PESEL'],
-            'isBailiff' => false,
-            'description' => 'testing',
-        ]);
+        try {
+            $client->testdata()->person()->create([
+                'nip' => $_ENV['NIP'],
+                'pesel' => $_ENV['PESEL'],
+                'isBailiff' => false,
+                'description' => 'testing',
+            ]);
+        } catch (BadRequestException $exception) {
+            if (str_starts_with($exception->getMessage(), '30001')) {
+                // ignore
+            }
+        }
     })
     ->afterAll(function (): void {
         $client = (new ClientBuilder())
