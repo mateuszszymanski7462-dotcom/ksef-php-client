@@ -9,6 +9,7 @@ use N1ebieski\KSEFClient\Contracts\Resources\Auth\AuthResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Certificates\CertificatesResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Invoices\InvoicesResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Limits\LimitsResourceInterface;
+use N1ebieski\KSEFClient\Contracts\Resources\Permissions\PermissionsResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Security\SecurityResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Sessions\SessionsResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Testdata\TestdataResourceInterface;
@@ -38,6 +39,8 @@ interface ClientResourceInterface
     public function sessions(): SessionsResourceInterface;
 
     public function invoices(): InvoicesResourceInterface;
+
+    public function permissions(): PermissionsResourceInterface;
 
     public function certificates(): CertificatesResourceInterface;
 

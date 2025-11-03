@@ -11,13 +11,14 @@ use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierFingerprintG
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierNipGroup;
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierPeselGroup;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Description;
 
 final class GrantsRequest extends AbstractRequest implements BodyInterface
 {
     public function __construct(
         public readonly SubjectIdentifierNipGroup | SubjectIdentifierPeselGroup | SubjectIdentifierFingerprintGroup $subjectIdentifierGroup,
         public readonly ContextIdentifierNipGroup | ContextIdentifierInternalIdGroup $contextIdentifierGroup,
-        public readonly string $description,
+        public readonly Description $description,
         public readonly string $subunitName
     ) {
     }

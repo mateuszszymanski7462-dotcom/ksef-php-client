@@ -12,6 +12,7 @@ use N1ebieski\KSEFClient\DTOs\Requests\Permissions\TargetIdentifierInternalIdGro
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\TargetIdentifierNipGroup;
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\TargetIdentifierTypeGroup;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Description;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Indirect\IndirectPermissionType;
 
 final class GrantsRequest extends AbstractRequest implements BodyInterface
@@ -23,7 +24,7 @@ final class GrantsRequest extends AbstractRequest implements BodyInterface
         public readonly SubjectIdentifierNipGroup | SubjectIdentifierPeselGroup | SubjectIdentifierFingerprintGroup $subjectIdentifierGroup,
         public readonly TargetIdentifierNipGroup | TargetIdentifierInternalIdGroup | TargetIdentifierTypeGroup $targetIdentifierGroup,
         public readonly array $permissions,
-        public readonly string $description
+        public readonly Description $description
     ) {
     }
 

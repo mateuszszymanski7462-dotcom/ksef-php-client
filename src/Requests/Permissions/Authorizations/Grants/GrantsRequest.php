@@ -9,16 +9,14 @@ use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierNipGroup;
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierPeppolIdGroup;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
 use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Authorizations\AuthorizationPermissionType;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Description;
 
 final class GrantsRequest extends AbstractRequest implements BodyInterface
 {
-    /**
-     * @param array<int, AuthorizationPermissionType> $permissions
-     */
     public function __construct(
         public readonly SubjectIdentifierNipGroup | SubjectIdentifierPeppolIdGroup $subjectIdentifierGroup,
-        public readonly array $permissions,
-        public readonly string $description
+        public readonly AuthorizationPermissionType $permission,
+        public readonly Description $description
     ) {
     }
 

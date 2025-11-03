@@ -14,6 +14,7 @@ use N1ebieski\KSEFClient\Contracts\Resources\Certificates\CertificatesResourceIn
 use N1ebieski\KSEFClient\Contracts\Resources\ClientResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Invoices\InvoicesResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Limits\LimitsResourceInterface;
+use N1ebieski\KSEFClient\Contracts\Resources\Permissions\PermissionsResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Security\SecurityResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Sessions\SessionsResourceInterface;
 use N1ebieski\KSEFClient\Contracts\Resources\Testdata\TestdataResourceInterface;
@@ -25,6 +26,7 @@ use N1ebieski\KSEFClient\Resources\Auth\AuthResource;
 use N1ebieski\KSEFClient\Resources\Certificates\CertificatesResource;
 use N1ebieski\KSEFClient\Resources\Invoices\InvoicesResource;
 use N1ebieski\KSEFClient\Resources\Limits\LimitsResource;
+use N1ebieski\KSEFClient\Resources\Permissions\PermissionsResource;
 use N1ebieski\KSEFClient\Resources\Security\SecurityResource;
 use N1ebieski\KSEFClient\Resources\Sessions\SessionsResource;
 use N1ebieski\KSEFClient\Resources\Testdata\TestdataResource;
@@ -164,6 +166,17 @@ final class ClientResource extends AbstractResource implements ClientResourceInt
             $this->refreshTokenIfExpired();
 
             return new InvoicesResource($this->client, $this->config, $this->exceptionHandler);
+        } catch (Throwable $throwable) {
+            throw $this->exceptionHandler->handle($throwable);
+        }
+    }
+
+    public function permissions(): PermissionsResourceInterface
+    {
+        try {
+            $this->refreshTokenIfExpired();
+
+            return new PermissionsResource($this->client, $this->exceptionHandler);
         } catch (Throwable $throwable) {
             throw $this->exceptionHandler->handle($throwable);
         }

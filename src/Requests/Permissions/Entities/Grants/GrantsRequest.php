@@ -8,6 +8,7 @@ use N1ebieski\KSEFClient\Contracts\BodyInterface;
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\Entities\EntityPermission;
 use N1ebieski\KSEFClient\DTOs\Requests\Permissions\SubjectIdentifierNipGroup;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
+use N1ebieski\KSEFClient\ValueObjects\Requests\Permissions\Description;
 
 final class GrantsRequest extends AbstractRequest implements BodyInterface
 {
@@ -17,7 +18,7 @@ final class GrantsRequest extends AbstractRequest implements BodyInterface
     public function __construct(
         public readonly SubjectIdentifierNipGroup $subjectIdentifierGroup,
         public readonly array $permissions,
-        public readonly string $description
+        public readonly Description $description
     ) {
     }
 
