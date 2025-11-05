@@ -11,6 +11,7 @@ use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaUproszcz
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaVatMarzaFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaWWalucieObcejFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZaliczkowaZDodatkowymNabywcaFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZVatUEFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZZalacznikiemFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Error\ErrorResponseFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendRequestFixture;
@@ -33,6 +34,7 @@ dataset('validResponseProvider', function (): array {
         (new SendRequestFixture())->withFakturaFixture(new FakturaVatMarzaFixture())->withName('faktura VAT marża'),
         (new SendRequestFixture())->withFakturaFixture(new FakturaWWalucieObcejFixture())->withName('faktura w walucie obcej'),
         (new SendRequestFixture())->withFakturaFixture(new FakturaZZalacznikiemFixture())->withName('faktura z załącznikiem'),
+        (new SendRequestFixture())->withFakturaFixture(new FakturaZVatUEFixture())->withName('faktura z VAT UE'),
     ];
 
     $responses = [
@@ -62,7 +64,7 @@ test('valid response', function (SendRequestFixture $requestFixture, SendRespons
     $response = $clientStub->sessions()->online()->send($requestFixture->data)->object();
 
     expect($response)->toBeFixture($responseFixture->data);
-})->with('validResponseProvider');
+})->with('validResponseProvider')->only();
 
 test('invalid response', function (): void {
     $responseFixture = new ErrorResponseFixture();
