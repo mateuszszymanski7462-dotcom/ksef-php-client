@@ -66,21 +66,20 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
     ])->object();
 
     /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
-    $statusResponse = Utility::retry(function () use ($client, $sendResponse) {
+    $statusResponse = Utility::retry(function (int $attempts) use ($client, $sendResponse) {
         /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
         $statusResponse = $client->certificates()->enrollments()->status([
             'referenceNumber' => $sendResponse->referenceNumber
         ])->object();
 
-        if ($statusResponse->status->code === 200) {
-            return $statusResponse;
-        }
+        try {
+            expect($statusResponse->status->code)->toBe(200);
 
-        if ($statusResponse->status->code >= 400) {
-            throw new RuntimeException(
-                $statusResponse->status->description,
-                $statusResponse->status->code
-            );
+            return $statusResponse;
+        } catch (Throwable $exception) {
+            if ($attempts > 2) {
+                throw $exception;
+            }
         }
     });
 

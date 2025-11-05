@@ -98,4 +98,4 @@ test('send an invoice, check for UPO and generate QR code', function (): void {
     expect($qrCodes->code1->raw)->toBeString();
 
     $this->revokeCurrentSession($client);
-})->only();
+});

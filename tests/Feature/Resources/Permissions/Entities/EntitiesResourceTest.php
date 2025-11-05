@@ -40,7 +40,7 @@ afterAll(function (): void {
     ]);
 });
 
-test('give InvoiceWrite permission and send invoice', function (): void {
+test('give InvoiceWrite permission and send invoice as NIP_2', function (): void {
     /** @var AbstractTestCase $this */
     /** @var array<string, string> $_ENV */
 
@@ -59,7 +59,7 @@ test('give InvoiceWrite permission and send invoice', function (): void {
                 'type' => 'InvoiceWrite'
             ]
         ],
-        'description' => 'Give InvoiceWrite permission TO NIP_1'
+        'description' => 'Give InvoiceWrite permission to NIP_1'
     ])->object();
 
     Utility::retry(function (int $attempts) use ($clientNip2, $grantsResponse) {
@@ -158,4 +158,4 @@ test('give InvoiceWrite permission and send invoice', function (): void {
 
     $this->revokeCurrentSession($clientNip1);
     $this->revokeCurrentSession($clientNip2);
-})->only();
+});
