@@ -40,7 +40,7 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
-      - name: Setup Certificate
+      - name: Setup Certificates
         run: |
             mkdir -p ./scripts
             mkdir -p ./config/certificates/testing
