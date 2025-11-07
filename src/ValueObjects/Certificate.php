@@ -15,11 +15,13 @@ final class Certificate extends AbstractValueObject
      * @param array{issuer: array<string, string>, serialNumberHex: string} $info
      */
     public function __construct(
-        public readonly string $raw,
+        public readonly string $certificate,
         public readonly array $info,
         public readonly OpenSSLAsymmetricKey $privateKey,
     ) {
     }
+
+
 
     /**
      * @return array{bits: int, key: string, rsa: array, dsa: array, dh: array, ec: array, type: int}
@@ -51,7 +53,7 @@ final class Certificate extends AbstractValueObject
 
     public function getFingerPrint(): string
     {
-        return base64_encode(hash('sha256', base64_decode($this->raw), true));
+        return base64_encode(hash('sha256', base64_decode($this->getRaw()), true));
     }
 
     public function getSerialNumber(): string
@@ -68,5 +70,11 @@ final class Certificate extends AbstractValueObject
         }
 
         return implode(', ', array_reverse($issuer));
+    }
+
+    public function getRaw(): string
+    {
+        return trim(str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $this->certificate));
+        ;
     }
 }

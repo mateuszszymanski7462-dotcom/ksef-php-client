@@ -1231,18 +1231,15 @@ https://github.com/N1ebieski/ksef-app-example.test
 use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Action;
 use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Handler;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\ValueObjects\Certificate;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
 
 $certificate = file_get_contents(Utility::basePath('config/certificates/certificate.crt'));
 
-$privateKey = openssl_pkey_get_private(
-    file_get_contents(Utility::basePath('config/certificates/privateKey.key')),
-    'password'
-);
+$privateKey = file_get_contents(Utility::basePath('config/certificates/privateKey.key'));
 
 $certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
     new ConvertCertificateToPkcs12Action(
-        certificate: new Certificate($certificate, [], $privateKey),
+        certificate: CertificateFactory::makeFromString($certificate, $privateKey, 'password'),
         passphrase: 'password'
     )
 );
@@ -1269,7 +1266,7 @@ use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\DTOs\DN;
 use N1ebieski\KSEFClient\Factories\CSRFactory;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\ValueObjects\Certificate;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\ValueObjects\Mode;
 use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 
@@ -1324,7 +1321,7 @@ $certificateToPem = (new ConvertDerToPemHandler())->handle(
 
 $certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
     new ConvertCertificateToPkcs12Action(
-        certificate: new Certificate($certificateToPem, [], $csr->privateKey),
+        certificate: CertificateFactory::makeFromString($certificateToPem, $csr->privateKey),
         passphrase: 'password'
     )
 );

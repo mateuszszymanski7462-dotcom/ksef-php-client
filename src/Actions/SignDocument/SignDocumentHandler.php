@@ -104,7 +104,7 @@ final class SignDocumentHandler extends AbstractHandler
 
         $keyInfo->appendChild($x509data);
 
-        $x509Certificate = $dom->createElementNS((string) XmlNamespace::Ds->value, 'ds:X509Certificate', $action->certificate->raw);
+        $x509Certificate = $dom->createElementNS((string) XmlNamespace::Ds->value, 'ds:X509Certificate', $action->certificate->getRaw());
 
         $x509data->appendChild($x509Certificate);
 

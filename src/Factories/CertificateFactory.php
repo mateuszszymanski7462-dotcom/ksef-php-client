@@ -6,6 +6,7 @@ namespace N1ebieski\KSEFClient\Factories;
 
 use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\CertificatePath;
+use OpenSSLAsymmetricKey;
 use RuntimeException;
 
 /**
@@ -33,7 +34,14 @@ final class CertificateFactory extends AbstractFactory
 
         /** @var array{pkey: string, cert: string} $data */
 
-        $privateKey = openssl_pkey_get_private($data['pkey'], $certificatePath->passphrase);
+        return self::makeFromString($data['cert'], $data['pkey'], $certificatePath->passphrase);
+    }
+
+    public static function makeFromString(string $certificate, OpenSSLAsymmetricKey | string $privateKey, ?string $passphrase = null): Certificate
+    {
+        if ( ! $privateKey instanceof OpenSSLAsymmetricKey) {
+            $privateKey = openssl_pkey_get_private($privateKey, $passphrase);
+        }
 
         if ($privateKey === false) {
             throw new RuntimeException(
@@ -41,10 +49,8 @@ final class CertificateFactory extends AbstractFactory
             );
         }
 
-        $raw = trim(str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $data['cert']));
-
         /** @var array{issuer: array<string, string>, serialNumberHex: string}|false $info */
-        $info = openssl_x509_parse($data['cert']);
+        $info = openssl_x509_parse($certificate);
 
         if ($info === false) {
             throw new RuntimeException(
@@ -52,6 +58,6 @@ final class CertificateFactory extends AbstractFactory
             );
         }
 
-        return new Certificate($raw, $info, $privateKey);
+        return new Certificate($certificate, $info, $privateKey);
     }
 }
