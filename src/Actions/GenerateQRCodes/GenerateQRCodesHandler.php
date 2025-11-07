@@ -72,11 +72,11 @@ final class GenerateQRCodesHandler extends AbstractHandler
             $certificateLinkToSign = preg_replace('#^https://#', '', rtrim($certificateLink, '/'));
 
             $signature = match ($action->certificate->getPrivateKeyType()) {
-                PrivateKeyType::RSA => $this->handleSignDataByRSAPrivateKey(
+                PrivateKeyType::RSA => $this->handleSignatureByRSAPrivateKey(
                     $certificateLinkToSign,
                     $action->certificate->privateKey
                 ),
-                PrivateKeyType::EC => $this->handleSignDataByECPrivateKey(
+                PrivateKeyType::EC => $this->handleSignatureByECPrivateKey(
                     $certificateLinkToSign,
                     $action->certificate->privateKey
                 ),
@@ -98,7 +98,7 @@ final class GenerateQRCodesHandler extends AbstractHandler
         return new QRCodes($code1, $code2);
     }
 
-    private function handleSignDataByRSAPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
+    private function handleSignatureByRSAPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
     {
         $privateKeyAsString = '';
 
@@ -120,7 +120,7 @@ final class GenerateQRCodesHandler extends AbstractHandler
             ->sign($data);
     }
 
-    private function handleSignDataByECPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
+    private function handleSignatureByECPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
     {
         $signature = '';
 
