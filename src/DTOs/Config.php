@@ -7,7 +7,6 @@ namespace N1ebieski\KSEFClient\DTOs;
 use N1ebieski\KSEFClient\Contracts\ConfigInterface;
 use N1ebieski\KSEFClient\Support\AbstractDTO;
 use N1ebieski\KSEFClient\ValueObjects\AccessToken;
-use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\EncryptionKey;
 use N1ebieski\KSEFClient\ValueObjects\HttpClient\BaseUri;
 use N1ebieski\KSEFClient\ValueObjects\RefreshToken;
@@ -22,8 +21,7 @@ final class Config extends AbstractDTO implements ConfigInterface
         public readonly ?AccessToken $accessToken = null,
         public readonly ?RefreshToken $refreshToken = null,
         public readonly ?EncryptionKey $encryptionKey = null,
-        public readonly ?EncryptedKey $encryptedKey = null,
-        public readonly ?Certificate $certificate = null,
+        public readonly ?EncryptedKey $encryptedKey = null
     ) {
     }
 

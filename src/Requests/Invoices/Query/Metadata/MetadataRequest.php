@@ -52,7 +52,7 @@ final class MetadataRequest extends AbstractRequest implements ParametersInterfa
     public function toParameters(): array
     {
         /** @var array<string, mixed> */
-        return $this->toArray(only: ['pageSize', 'pageOffset']);
+        return $this->toArray(only: ['pageSize', 'pageOffset', 'sortOrder']);
     }
 
     public function toBody(): array

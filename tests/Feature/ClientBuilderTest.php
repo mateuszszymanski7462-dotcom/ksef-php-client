@@ -8,11 +8,11 @@ use N1ebieski\KSEFClient\Actions\ConvertPemToDer\ConvertPemToDerAction;
 use N1ebieski\KSEFClient\Actions\ConvertPemToDer\ConvertPemToDerHandler;
 use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\DTOs\DN;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\Factories\CSRFactory;
 use N1ebieski\KSEFClient\Support\Utility;
 use N1ebieski\KSEFClient\Tests\Feature\AbstractTestCase;
 use N1ebieski\KSEFClient\ValueObjects\AccessToken;
-use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\Mode;
 use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 use N1ebieski\KSEFClient\ValueObjects\RefreshToken;
@@ -27,7 +27,7 @@ dataset('privateKeyTypeProvider', fn (): array => [
     'EC' => [PrivateKeyType::EC],
 ]);
 
-test('auto authorization via certificate .p12', function (): void {
+test('auto authorization via certificate path .p12', function (): void {
     /** @var AbstractTestCase $this */
     $client = $this->createClient();
 
@@ -40,10 +40,10 @@ test('auto authorization via certificate .p12', function (): void {
     expect($refreshToken)->toBeInstanceOf(RefreshToken::class);
     expect($refreshToken?->validUntil)->toBeGreaterThan(new DateTimeImmutable('+6 days'));
 
-    $this->revokeCurrentSession();
+    $this->revokeCurrentSession($client);
 });
 
-test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $privateKeyType): void {
+test('auto authorization via KSEF certificate path .p12', function (PrivateKeyType $privateKeyType): void {
     /**
      * @var AbstractTestCase $this
      * @var array<string, string> $_ENV
@@ -66,21 +66,20 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
     ])->object();
 
     /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
-    $statusResponse = Utility::retry(function () use ($client, $sendResponse) {
+    $statusResponse = Utility::retry(function (int $attempts) use ($client, $sendResponse) {
         /** @var object{status: object{code: int, description: string}, certificateSerialNumber: string} */
         $statusResponse = $client->certificates()->enrollments()->status([
             'referenceNumber' => $sendResponse->referenceNumber
         ])->object();
 
-        if ($statusResponse->status->code === 200) {
-            return $statusResponse;
-        }
+        try {
+            expect($statusResponse->status->code)->toBe(200);
 
-        if ($statusResponse->status->code >= 400) {
-            throw new RuntimeException(
-                $statusResponse->status->description,
-                $statusResponse->status->code
-            );
+            return $statusResponse;
+        } catch (Throwable $exception) {
+            if ($attempts > 2) {
+                throw $exception;
+            }
         }
     });
 
@@ -97,17 +96,19 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
 
     $certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
         new ConvertCertificateToPkcs12Action(
-            certificate: new Certificate($certificateToPem, [], $csr->privateKey), //@phpstan-ignore-line
-            passphrase: $_ENV['KSEF_AUTH_CERTIFICATE_PASSPHRASE']
+            certificate: CertificateFactory::makeFromPkcs8($certificateToPem, $csr->privateKey),
+            passphrase: $_ENV['KSEF_AUTH_CERTIFICATE_PASSPHRASE_1']
         )
     );
 
-    file_put_contents(Utility::basePath($_ENV['KSEF_AUTH_CERTIFICATE_PATH']), $certificateToPkcs12);
+    file_put_contents(Utility::basePath($_ENV['KSEF_AUTH_CERTIFICATE_PATH_1']), $certificateToPkcs12);
+
+    $this->revokeCurrentSession($client);
 
     $client = (new ClientBuilder())
         ->withMode(Mode::Test)
-        ->withIdentifier($_ENV['NIP'])
-        ->withCertificatePath(Utility::basePath($_ENV['KSEF_AUTH_CERTIFICATE_PATH']), $_ENV['KSEF_AUTH_CERTIFICATE_PASSPHRASE'])
+        ->withIdentifier($_ENV['NIP_1'])
+        ->withCertificatePath(Utility::basePath($_ENV['KSEF_AUTH_CERTIFICATE_PATH_1']), $_ENV['KSEF_AUTH_CERTIFICATE_PASSPHRASE_1'])
         ->build();
 
     $accessToken = $client->getAccessToken();
@@ -125,8 +126,33 @@ test('auto authorization via KSEF certificate .p12', function (PrivateKeyType $p
 
     expect($revokeCertificate)->toBe(204);
 
-    $this->revokeCurrentSession();
+    $this->revokeCurrentSession($client);
 })->with('privateKeyTypeProvider');
+
+test('auto authorization via certificate .p12', function (): void {
+    /** @var array<string, string> $_ENV */
+    /** @var string $pkcs12 */
+    $pkcs12 = file_get_contents(Utility::basePath($_ENV['CERTIFICATE_PATH_1']));
+
+    $certificate = CertificateFactory::makeFromPkcs12($pkcs12, $_ENV['CERTIFICATE_PASSPHRASE_1']);
+
+    $client = (new ClientBuilder())
+        ->withMode(Mode::Test)
+        ->withIdentifier($_ENV['NIP_1'])
+        ->withCertificate($certificate)
+        ->build();
+
+    $accessToken = $client->getAccessToken();
+    $refreshToken = $client->getRefreshToken();
+
+    expect($accessToken)->toBeInstanceOf(AccessToken::class);
+    expect($accessToken?->validUntil)->toBeGreaterThan(new DateTimeImmutable());
+
+    expect($refreshToken)->toBeInstanceOf(RefreshToken::class);
+    expect($refreshToken?->validUntil)->toBeGreaterThan(new DateTimeImmutable('+6 days'));
+
+    $this->revokeCurrentSession($client);
+});
 
 test('auto authorization via KSEF Token', function (): void {
     /**
@@ -144,9 +170,11 @@ test('auto authorization via KSEF Token', function (): void {
         'description' => 'testing',
     ])->object();
 
+    $this->revokeCurrentSession($client);
+
     $client = (new ClientBuilder())
         ->withMode(Mode::Test)
-        ->withIdentifier($_ENV['NIP'])
+        ->withIdentifier($_ENV['NIP_1'])
         ->withKsefToken($response->token)
         ->build();
 
@@ -160,5 +188,5 @@ test('auto authorization via KSEF Token', function (): void {
     expect($refreshToken?->validUntil)->toBeGreaterThan(new DateTimeImmutable('+6 days'));
 
     $this->revokeKsefToken($response->referenceNumber);
-    $this->revokeCurrentSession();
+    $this->revokeCurrentSession($client);
 });

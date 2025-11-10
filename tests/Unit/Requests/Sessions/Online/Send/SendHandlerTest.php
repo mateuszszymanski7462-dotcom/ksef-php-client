@@ -12,7 +12,9 @@ use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaVatMarza
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaWWalucieObcejFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZaliczkowaZDodatkowymNabywcaFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZVatUEFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZwolnienieVatFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZZalacznikiemFixture;
+use N1ebieski\KSEFClient\Testing\Fixtures\DTOs\Requests\Sessions\FakturaZZaplataCzesciowaFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Error\ErrorResponseFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendRequestFixture;
 use N1ebieski\KSEFClient\Testing\Fixtures\Requests\Sessions\Online\Send\SendResponseFixture;
@@ -35,6 +37,8 @@ dataset('validResponseProvider', function (): array {
         (new SendRequestFixture())->withFakturaFixture(new FakturaWWalucieObcejFixture())->withName('faktura w walucie obcej'),
         (new SendRequestFixture())->withFakturaFixture(new FakturaZZalacznikiemFixture())->withName('faktura z załącznikiem'),
         (new SendRequestFixture())->withFakturaFixture(new FakturaZVatUEFixture())->withName('faktura z VAT UE'),
+        (new SendRequestFixture())->withFakturaFixture(new FakturaZZaplataCzesciowaFixture())->withName('faktura z zapłatą częściową'),
+        (new SendRequestFixture())->withFakturaFixture(new FakturaZwolnienieVatFixture())->withName('faktura zwolnięcie VAT'),
     ];
 
     $responses = [

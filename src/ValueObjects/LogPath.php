@@ -6,26 +6,12 @@ namespace N1ebieski\KSEFClient\ValueObjects;
 
 use N1ebieski\KSEFClient\Contracts\ValueAwareInterface;
 use N1ebieski\KSEFClient\Support\AbstractValueObject;
-use N1ebieski\KSEFClient\Validator\Rules\File\ExistsRule;
-use N1ebieski\KSEFClient\Validator\Validator;
 use Stringable;
 
 final class LogPath extends AbstractValueObject implements ValueAwareInterface, Stringable
 {
-    public readonly string $value;
-
-    public function __construct(string $value)
+    public function __construct(public readonly string $value)
     {
-        Validator::validate($value, [
-            new ExistsRule(),
-        ]);
-
-        $this->value = $value;
-    }
-
-    public function withSlashAtEnd(): self
-    {
-        return str_ends_with($this->value, '/') ? $this : new self($this->value . '/');
     }
 
     public function __toString(): string

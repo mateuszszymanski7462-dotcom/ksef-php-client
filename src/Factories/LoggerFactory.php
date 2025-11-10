@@ -39,7 +39,10 @@ final class LoggerFactory extends AbstractFactory
                 $logPath->value,
                 $level !== null ? Level::fromName($level) : Level::Debug
             );
-            $formatter = new LineFormatter(allowInlineLineBreaks: true);
+            $formatter = new LineFormatter(
+                allowInlineLineBreaks: true,
+                includeStacktraces: true
+            );
             $handler->setFormatter($formatter);
 
             return new Logger('ksef-php-client', [$handler]);

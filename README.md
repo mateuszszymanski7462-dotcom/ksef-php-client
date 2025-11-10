@@ -69,6 +69,29 @@ Main features:
         - [Invoices Exports](#invoices-exports)
             - [Invoices Exports Init](#invoices-exports-init)
             - [Invoices Exposts Status](#invoices-exports-status)
+    - [Permissions](#permissions)
+        - [Permissions Persons](#permissions-persons)
+            - [Permissions Persons Grants](#permissions-persons-grants)
+        - [Permissions Entities](#permissions-entities)
+            - [Permissions Entities Grants](#permissions-entities-grants)
+        - [Permissions Authorizations](#permissions-authorizations)
+            - [Permissions Authorizations Grants](#permissions-authorizations-grants)
+            - [Permissions Authorizations Grants Revoke](#permissions-authorizations-grants-revoke)
+        - [Permissions Indirect](#permissions-indirect)
+            - [Permissions Indirect Grants](#permissions-indirect-grants)
+        - [Permissions Subunits](#permissions-subunits)
+            - [Permissions Subunits Grants](#permissions-subunits-grants)
+        - [Permissions EuEntities](#permissions-euentities)
+            - [Permissions EuEntities Administration](#permissions-euentities-administration)
+                - [Permissions EuEntities Administration Grants](#permissions-euentities-administration-grants)
+            - [Permissions EuEntities Grants](#permissions-euentities-grants)
+        - [Permissions Common](#permissions-common)
+            - [Permissions Common Grants Revoke](#permissions-common-grants-revoke)
+        - [Permissions Query](#permissions-query)
+            - [Permissions Query Personal](#permissions-querypersonal)
+                - [Permissions Query Personal Grants](#permissions-query-personal-grants)
+        - [Permissions Operations](#permissions-operations)
+            - [Permissions Operations Status](#permissions-operations-status)
     - [Certificates](#certificates)
         - [Certificates Limits](#certificates-limits)
         - [Certificates Enrollments](#certificates-enrollments)
@@ -99,7 +122,8 @@ Main features:
 
 - [Examples](#examples)
     - [Integration with a frontend application using certificate-based authentication](#integration-with-a-frontend-application-using-certificate-based-authentication)
-    - [Generate a KSEF certificate and convert to .p12 file](#generate-a-ksef-certificate-and-convert-to-p12-file)
+    - [Conversion of the KSEF certificate and private key from MCU to a .p12 file](#conversion-of-the-ksef-certificate-and-private-key-from-mcu-to-a-p12-file)
+    - [Generate a KSEF certificate and convert to .p12 file](#generate-a-ksef-certificate-and-convert-to-a-p12-file)
     - [Send an invoice, check for UPO and generate QR code](#send-an-invoice-check-for-upo-and-generate-qr-code)
     - [Batch async send multiple invoices and check for UPO](#batch-async-send-multiple-invoices-and-check-for-upo)
     - [Create an offline invoice and generate both QR codes](#create-an-offline-invoice-and-generate-both-qr-codes)
@@ -140,7 +164,8 @@ $client = (new ClientBuilder())
     ->withAccessToken($_ENV['ACCESS_TOKEN'], $_ENV['VALID_UNTIL']) // Optional, if present, auto authorization is skipped
     ->withRefreshToken($_ENV['REFRESH_TOKEN'], $_ENV['VALID_UNTIL']) // Optional, if present, auto refresh access token is enabled
     ->withKsefToken($_ENV['KSEF_TOKEN']) // Required for API Token authorization. Optional otherwise
-    ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE']) // Required .p12 file for Certificate authorization. Optional otherwise
+    ->withCertificate($_ENV['CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE']) // Required .p12 contents for Certificate authorization. Optional otherwise
+    ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE']) // Required path to .p12 file for Certificate authorization. Optional otherwise
     ->withVerifyCertificateChain(true) // Optional. Explanation https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Uzyskiwanie-dostepu/paths/~1api~1v2~1auth~1xades-signature/post
     ->withEncryptionKey(EncryptionKeyFactory::makeRandom()) // Required for invoice resources. Remember to save this value!
     ->withIdentifier('NIP_NUMBER') // Required for authorization. Optional otherwise
@@ -199,6 +224,19 @@ use N1ebieski\KSEFClient\ClientBuilder;
 
 $client = (new ClientBuilder())
     ->withCertificatePath($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
+    ->withIdentifier('NIP_NUMBER')
+    ->build();
+
+// Do something with the available resources
+```
+
+or:
+
+```php
+use N1ebieski\KSEFClient\ClientBuilder;
+
+$client = (new ClientBuilder())
+    ->withCertificate($_ENV['CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
     ->withIdentifier('NIP_NUMBER')
     ->build();
 
@@ -708,6 +746,206 @@ $response = $client->invoices()->exports()->status(
 ```
 </details>
 
+### Permissions
+
+#### Permissions Persons
+
+<details>
+    <summary>
+        <h5>Permissions Persons Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1persons~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Persons\Grants\GrantsRequest;
+
+$response = $client->permissions()->persons()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Entities
+
+<details>
+    <summary>
+        <h5>Permissions Entities Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1entities~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Entities\Grants\GrantsRequest;
+
+$response = $client->permissions()->entities()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Authorizations
+
+<details>
+    <summary>
+        <h5>Permissions Authorizations Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1authorizations~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Authorizations\Grants\GrantsRequest;
+
+$response = $client->permissions()->authorizations()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+<details>
+    <summary>
+        <h5>Permissions Authorizations Grants Revoke</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Odbieranie-uprawnien/paths/~1api~1v2~1permissions~1authorizations~1grants~1%7BpermissionId%7D/delete
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Authorizations\Revoke\RevokeRequest;
+
+$response = $client->permissions()->authorizations()->revoke(
+    new RevokeRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Indirect
+
+<details>
+    <summary>
+        <h5>Permissions Indirect Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1indirect~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Indirect\Grants\GrantsRequest;
+
+$response = $client->permissions()->indirect()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Subunits
+
+<details>
+    <summary>
+        <h5>Permissions Subunits Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1subunits~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Subunits\Grants\GrantsRequest;
+
+$response = $client->permissions()->subunits()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions EuEntities
+
+<details>
+    <summary>
+        <h5>Permissions EuEntities Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1eu-entities~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\EuEntities\Grants\GrantsRequest;
+
+$response = $client->permissions()->euEntities()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+##### Permissions EuEntities Administration
+
+<details>
+    <summary>
+        <h5>Permissions EuEntities Administration Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Nadawanie-uprawnien/paths/~1api~1v2~1permissions~1eu-entities~1administration~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\EuEntities\Administration\Grants\GrantsRequest;
+
+$response = $client->permissions()->euEntities()->administration()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Common
+
+<details>
+    <summary>
+        <h5>Permissions Common Grants Revoke</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Odbieranie-uprawnien/paths/~1api~1v2~1permissions~1common~1grants~1%7BpermissionId%7D/delete
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Common\Revoke\RevokeRequest;
+
+$response = $client->permissions()->common()->revoke(
+    new RevokeRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Query
+
+##### Permissions Query Personal
+
+<details>
+    <summary>
+        <h5>Permissions Query Personal Grants</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Wyszukiwanie-nadanych-uprawnien/paths/~1api~1v2~1permissions~1query~1personal~1grants/post
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Query\Personal\Grants\GrantsRequest;
+
+$response = $client->permissions()->query()->personal()->grants(
+    new GrantsRequest(...)
+)->object();
+```
+</details>
+
+#### Permissions Operations
+
+<details>
+    <summary>
+        <h5>Permissions Operations Status</h5>
+    </summary>
+
+https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Operacje/paths/~1api~1v2~1permissions~1operations~1%7BreferenceNumber%7D/get
+
+```php
+use N1ebieski\KSEFClient\Requests\Permissions\Operations\Status\StatusRequest;
+
+$response = $client->permissions()->operations()->status(
+    new StatusRequest(...)
+)->object();
+```
+</details>
+
 ### Certificates
 
 <details>
@@ -1000,7 +1238,33 @@ https://github.com/N1ebieski/ksef-app-example.test
 
 <details>
     <summary>
-        <h3>Generate a KSEF certificate and convert to .p12 file</h3>
+        <h3>Conversion of the KSEF certificate and private key from MCU to a .p12 file</h3>
+    </summary>
+
+```php
+use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Action;
+use N1ebieski\KSEFClient\Actions\ConvertCertificateToPkcs12\ConvertCertificateToPkcs12Handler;
+use N1ebieski\KSEFClient\Support\Utility;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
+
+$certificate = file_get_contents(Utility::basePath('config/certificates/certificate.crt'));
+
+$privateKey = file_get_contents(Utility::basePath('config/certificates/privateKey.key'));
+
+$certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
+    new ConvertCertificateToPkcs12Action(
+        certificate: CertificateFactory::makeFromPkcs8($certificate, $privateKey, 'password'),
+        passphrase: 'password'
+    )
+);
+
+file_put_contents(Utility::basePath('config/certificates/ksef-certificate.p12'), $certificateToPkcs12);
+```
+</details>
+
+<details>
+    <summary>
+        <h3>Generate a KSEF certificate and convert to a .p12 file</h3>
     </summary>
 
 ```php
@@ -1016,7 +1280,7 @@ use N1ebieski\KSEFClient\ClientBuilder;
 use N1ebieski\KSEFClient\DTOs\DN;
 use N1ebieski\KSEFClient\Factories\CSRFactory;
 use N1ebieski\KSEFClient\Support\Utility;
-use N1ebieski\KSEFClient\ValueObjects\Certificate;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\ValueObjects\Mode;
 use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 
@@ -1071,7 +1335,7 @@ $certificateToPem = (new ConvertDerToPemHandler())->handle(
 
 $certificateToPkcs12 = (new ConvertCertificateToPkcs12Handler())->handle(
     new ConvertCertificateToPkcs12Action(
-        certificate: new Certificate($certificateToPem, [], $csr->privateKey),
+        certificate: CertificateFactory::makeFromPkcs8($certificateToPem, $csr->privateKey),
         passphrase: 'password'
     )
 );
@@ -1283,7 +1547,7 @@ $nip = 'NIP_NUMBER';
 // From https://ksef-test.mf.gov.pl/docs/v2/index.html#tag/Certyfikaty/paths/~1api~1v2~1certificates~1query/post
 $certificateSerialNumber = CertificateSerialNumber::from($_ENV['CERTIFICATE_SERIAL_NUMBER']);
 // Remember: this certificate must be "Offline" type, not "Authentication"
-$certificate = CertificateFactory::make(
+$certificate = CertificateFactory::makeFromCertificatePath(
     CertificatePath::from($_ENV['PATH_TO_CERTIFICATE'], $_ENV['CERTIFICATE_PASSPHRASE'])
 );
 

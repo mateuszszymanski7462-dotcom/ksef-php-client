@@ -12,9 +12,12 @@ final class Utility
     public static function retry(Closure $closure, int $backoff = 10, int $retryUntil = 120): mixed
     {
         $seconds = 0;
+        $attempts = 0;
 
         while (true) {
-            $result = $closure();
+            $attempts++;
+
+            $result = $closure($attempts);
 
             if ($result !== null) {
                 return $result;

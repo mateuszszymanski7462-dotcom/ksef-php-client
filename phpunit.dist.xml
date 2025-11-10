@@ -15,11 +15,19 @@
         </include>
     </source>
     <php>
-        <env name="NIP" value="6669666921" />
-        <env name="PESEL" value="90051701234" />
-        <env name="CERTIFICATE_PATH" value="config/certificates/testing/certificate.p12" />
-        <env name="CERTIFICATE_PASSPHRASE" value="password" />
-        <env name="KSEF_AUTH_CERTIFICATE_PATH" value="config/certificates/testing/ksef-auth-certificate.p12" />
-        <env name="KSEF_AUTH_CERTIFICATE_PASSPHRASE" value="password" />
+        <env name="NIP_1" value="6669666921" />
+        <env name="PESEL_1" value="90051701234" />
+        <env name="CERTIFICATE_PATH_1" value="config/certificates/testing/6669666921/certificate.p12" />
+        <env name="CERTIFICATE_PASSPHRASE_1" value="password" />
+        <env name="KSEF_AUTH_CERTIFICATE_PATH_1" value="config/certificates/testing/6669666921/ksef-auth-certificate.p12" />
+        <env name="KSEF_AUTH_CERTIFICATE_PASSPHRASE_1" value="password" />
+
+        <env name="NIP_2" value="6669666922" />
+        <env name="CERTIFICATE_PATH_2" value="config/certificates/testing/6669666922/certificate.p12" />
+        <env name="CERTIFICATE_PASSPHRASE_2" value="password" />
+
+        <env name="NIP_3" value="6669666923" />
+        <env name="CERTIFICATE_PATH_3" value="config/certificates/testing/6669666923/certificate.p12" />
+        <env name="CERTIFICATE_PASSPHRASE_3" value="password" />        
     </php>
 </phpunit>

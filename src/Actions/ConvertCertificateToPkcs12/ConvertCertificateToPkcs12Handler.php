@@ -14,7 +14,7 @@ final class ConvertCertificateToPkcs12Handler extends AbstractHandler
         $pkcs12 = '';
 
         $result = openssl_pkcs12_export(
-            certificate: $action->certificate->raw,
+            certificate: $action->certificate->certificate,
             output: $pkcs12,
             private_key: $action->certificate->privateKey,
             passphrase: $action->passphrase

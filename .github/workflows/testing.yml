@@ -40,14 +40,38 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
-      - name: Setup Certificate
+      - name: Setup Certificates
         run: |
-          mkdir -p ./scripts
-          mkdir -p ./config/certificates/testing
-          echo "${{ vars.SIGNATURE_NIP }}" > ./scripts/signature-nip.txt
-          openssl req -newkey rsa:2048 -nodes -keyout "./config/certificates/testing/key.pem" -out "./config/certificates/testing/certificate.csr" -config ./scripts/signature-nip.txt
-          openssl x509 -req -in "./config/certificates/testing/certificate.csr" -signkey "./config/certificates/testing/key.pem" -out "./config/certificates/testing/certificate.crt"
-          openssl pkcs12 -export -out "./config/certificates/testing/certificate.p12" -inkey "./config/certificates/testing/key.pem" -in "./config/certificates/testing/certificate.crt" -passout pass:password
+            mkdir -p ./scripts
+            mkdir -p ./config/certificates/testing
+
+            for i in 1 2 3; do
+              NIP="666966692$i"
+              VAR_NAME="SIGNATURE_NIP_$i"
+              echo "${!VAR_NAME}" > ./scripts/signature-nip.txt
+
+              mkdir -p "./config/certificates/testing/$NIP"
+
+              openssl req -newkey rsa:2048 -nodes \
+                -keyout "./config/certificates/testing/$NIP/key.pem" \
+                -out "./config/certificates/testing/$NIP/certificate.csr" \
+                -config ./scripts/signature-nip.txt
+
+              openssl x509 -req \
+                -in "./config/certificates/testing/$NIP/certificate.csr" \
+                -signkey "./config/certificates/testing/$NIP/key.pem" \
+                -out "./config/certificates/testing/$NIP/certificate.crt"
+
+              openssl pkcs12 -export \
+                -out "./config/certificates/testing/$NIP/certificate.p12" \
+                -inkey "./config/certificates/testing/$NIP/key.pem" \
+                -in "./config/certificates/testing/$NIP/certificate.crt" \
+                -passout pass:password
+            done
+        env:
+          SIGNATURE_NIP_1: ${{ vars.SIGNATURE_NIP_1 }}
+          SIGNATURE_NIP_2: ${{ vars.SIGNATURE_NIP_2 }}
+          SIGNATURE_NIP_3: ${{ vars.SIGNATURE_NIP_3 }}    
 
       - name: Install Composer dependencies
         run: composer update --no-interaction --prefer-dist --optimize-autoloader
@@ -64,5 +88,9 @@ jobs:
         if: matrix.php == '8.1'
         run: ./vendor/bin/phpstan analyse --error-format=github 
 
-      - name: Run Pest
-        run: ./vendor/bin/pest --parallel --ci
+      - name: Run Pest Unit tests
+        run: ./vendor/bin/pest tests/Unit --parallel --ci
+
+      - name: Run Pest Feature tests
+        if: matrix.php == '8.1'
+        run: ./vendor/bin/pest tests/Feature --parallel --ci

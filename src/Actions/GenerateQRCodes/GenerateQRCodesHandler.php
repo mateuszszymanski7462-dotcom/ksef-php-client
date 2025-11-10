@@ -15,6 +15,10 @@ use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\CertificateSerialNumber;
 use N1ebieski\KSEFClient\ValueObjects\PrivateKeyType;
 use N1ebieski\KSEFClient\ValueObjects\QRCode;
+use OpenSSLAsymmetricKey;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Crypt\RSA;
+use phpseclib3\Crypt\RSA\PrivateKey;
 use RuntimeException;
 
 final class GenerateQRCodesHandler extends AbstractHandler
@@ -64,29 +68,23 @@ final class GenerateQRCodesHandler extends AbstractHandler
 
             $certificateLink = implode('/', $code2Parts);
 
-            $signature = '';
+            /** @var string $certificateLinkToSign */
+            $certificateLinkToSign = preg_replace('#^https://#', '', rtrim($certificateLink, '/'));
 
-            $sign = openssl_sign(
-                hash('sha256', ltrim($certificateLink, 'https://'), true),
-                $signature,
-                $action->certificate->privateKey,
-                $action->certificate->getAlgorithm()
-            );
+            $signature = match ($action->certificate->getPrivateKeyType()) {
+                PrivateKeyType::RSA => $this->handleSignatureByRSAPrivateKey(
+                    $certificateLinkToSign,
+                    $action->certificate->privateKey
+                ),
+                PrivateKeyType::EC => $this->handleSignatureByECPrivateKey(
+                    $certificateLinkToSign,
+                    $action->certificate->privateKey
+                ),
+            };
 
-            if ($sign === false) {
-                throw new RuntimeException('Unable to sign link');
-            }
+            $signatureBase64 = Str::base64URLEncode($signature);
 
-            // If private key type is EC, convert DER to raw. Don't ask me why, but it works
-            if ($action->certificate->getPrivateKeyType()->isEquals(PrivateKeyType::EC)) {
-                $signature = $this->convertEcdsaDerToRawHandler->handle(
-                    new ConvertEcdsaDerToRawAction($signature, 32) //@phpstan-ignore-line
-                );
-            }
-
-            $signature = Str::base64URLEncode($signature); //@phpstan-ignore-line
-
-            $certificateLink .= "/{$signature}";
+            $certificateLink .= "/{$signatureBase64}";
 
             $raw2 = $this->qrCodeBuilder
                 ->data($certificateLink)
@@ -98,5 +96,47 @@ final class GenerateQRCodesHandler extends AbstractHandler
         }
 
         return new QRCodes($code1, $code2);
+    }
+
+    private function handleSignatureByRSAPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
+    {
+        $privateKeyAsString = '';
+
+        $result = openssl_pkey_export($privateKey, $privateKeyAsString);
+
+        if ($result === false) {
+            throw new RuntimeException('Unable to export private key');
+        }
+
+        /** @var PrivateKey $private */
+        //@phpstan-ignore-next-line
+        $private = PublicKeyLoader::loadPrivateKey($privateKeyAsString);
+
+        //@phpstan-ignore-next-line
+        return $private->withPadding(RSA::SIGNATURE_PSS)
+            ->withHash('sha256')
+            ->withMGFHash('sha256')
+            ->withSaltLength(32)
+            ->sign($data);
+    }
+
+    private function handleSignatureByECPrivateKey(string $data, OpenSSLAsymmetricKey $privateKey): string
+    {
+        $signature = '';
+
+        $sign = openssl_sign(
+            $data,
+            $signature,
+            $privateKey,
+            OPENSSL_ALGO_SHA256
+        );
+
+        if ($sign === false) {
+            throw new RuntimeException('Unable to sign link');
+        }
+
+        return $this->convertEcdsaDerToRawHandler->handle(
+            new ConvertEcdsaDerToRawAction($signature, 32) //@phpstan-ignore-line
+        );
     }
 }

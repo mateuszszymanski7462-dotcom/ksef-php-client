@@ -44,6 +44,11 @@ final class ExceptionFactory extends AbstractFactory
 
                 return ClientException::class;
             }),
+            $statusCode === 404 => Utility::value(function () use (&$message): string {
+                $message ??= 'Not found';
+
+                return ClientException::class;
+            }),
             $statusCode > 400 && $statusCode < 500 => ClientException::class,
             $statusCode > 500 => ServerException::class,
             default => Exception::class

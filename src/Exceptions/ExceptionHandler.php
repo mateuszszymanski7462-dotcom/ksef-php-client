@@ -23,8 +23,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
                 ? "{$throwable->getCode()} {$throwable->getMessage()}"
                 : $throwable->getMessage();
 
-            $context = $throwable instanceof ContextInterface
-                ? (array) $throwable->context : [];
+            $context['exception'] = $throwable;
+
+            if ($throwable instanceof ContextInterface) {
+                $context['context'] = $throwable->context;
+            }
 
             $this->logger->error($message, $context);
         }

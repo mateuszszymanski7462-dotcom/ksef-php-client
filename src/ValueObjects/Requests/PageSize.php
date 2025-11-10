@@ -7,6 +7,7 @@ namespace N1ebieski\KSEFClient\ValueObjects\Requests;
 use N1ebieski\KSEFClient\Contracts\FromInterface;
 use N1ebieski\KSEFClient\Contracts\ValueAwareInterface;
 use N1ebieski\KSEFClient\Support\AbstractValueObject;
+use N1ebieski\KSEFClient\Validator\Rules\Number\MaxRule;
 use N1ebieski\KSEFClient\Validator\Rules\Number\MinRule;
 use N1ebieski\KSEFClient\Validator\Validator;
 
@@ -17,7 +18,8 @@ final class PageSize extends AbstractValueObject implements FromInterface, Value
     public function __construct(int $value)
     {
         Validator::validate($value, [
-            new MinRule(1)
+            new MinRule(10),
+            new MaxRule(100),
         ]);
 
         $this->value = $value;

@@ -10,7 +10,6 @@ use N1ebieski\KSEFClient\Contracts\HttpClient\HttpClientInterface;
 use N1ebieski\KSEFClient\Contracts\HttpClient\ResponseInterface;
 use N1ebieski\KSEFClient\DTOs\Config;
 use N1ebieski\KSEFClient\DTOs\HttpClient\Request;
-use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\Requests\AbstractHandler;
 use N1ebieski\KSEFClient\Support\Utility;
 use N1ebieski\KSEFClient\Validator\Rules\Xml\SchemaRule;
@@ -41,7 +40,7 @@ final class XadesSignatureHandler extends AbstractHandler
 
             $signedXml = $this->signDocument->handle(
                 new SignDocumentAction(
-                    certificate: CertificateFactory::make($request->certificatePath),
+                    certificate: $request->certificate,
                     document: $request->toXml(),
                 )
             );

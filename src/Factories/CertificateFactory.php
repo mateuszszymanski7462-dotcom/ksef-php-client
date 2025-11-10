@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace N1ebieski\KSEFClient\Factories;
 
+use Deprecated;
 use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\CertificatePath;
+use OpenSSLAsymmetricKey;
 use RuntimeException;
 
-/**
- * Special thanks to grafinet/xades-tools > https://github.com/grafinet/xades-tools
- * I could not use their dependency directly, but most of the logic in this class
- * is their authorship
- */
 final class CertificateFactory extends AbstractFactory
 {
+    #[Deprecated('Use makeFromCertificatePath instead')]
     public static function make(CertificatePath $certificatePath): Certificate
+    {
+        return self::makeFromCertificatePath($certificatePath);
+    }
+
+    #[Deprecated('Use makeFromPkcs8 instead')]
+    public static function makeFromString(string $certificate, OpenSSLAsymmetricKey | string $privateKey, ?string $passphrase = null): Certificate
+    {
+        return self::makeFromPkcs8($certificate, $privateKey, $passphrase);
+    }
+
+    public static function makeFromCertificatePath(CertificatePath $certificatePath): Certificate
     {
         $pkcs12 = file_get_contents($certificatePath->path);
 
@@ -23,7 +32,36 @@ final class CertificateFactory extends AbstractFactory
             throw new RuntimeException('Unable to read the cert file');
         }
 
-        $pkcs12read = openssl_pkcs12_read($pkcs12, $data, $certificatePath->passphrase ?? '');
+        return self::makeFromPkcs12($pkcs12, $certificatePath->passphrase);
+    }
+
+    public static function makeFromPkcs8(string $certificate, OpenSSLAsymmetricKey | string $privateKey, ?string $passphrase = null): Certificate
+    {
+        if ( ! $privateKey instanceof OpenSSLAsymmetricKey) {
+            $privateKey = openssl_pkey_get_private($privateKey, $passphrase);
+        }
+
+        if ($privateKey === false) {
+            throw new RuntimeException(
+                sprintf('Unable to read the cert file. OpenSSL: %s', (openssl_error_string() ?: ''))
+            );
+        }
+
+        /** @var array{issuer: array<string, string>, serialNumberHex: string}|false $info */
+        $info = openssl_x509_parse($certificate);
+
+        if ($info === false) {
+            throw new RuntimeException(
+                sprintf('Unable to read the cert file. OpenSSL: %s', (openssl_error_string() ?: ''))
+            );
+        }
+
+        return new Certificate($certificate, $info, $privateKey);
+    }
+
+    public static function makeFromPkcs12(string $certificate, ?string $passphrase = null): Certificate
+    {
+        $pkcs12read = openssl_pkcs12_read($certificate, $data, $passphrase ?? '');
 
         if ($pkcs12read === false) {
             throw new RuntimeException(
@@ -33,25 +71,6 @@ final class CertificateFactory extends AbstractFactory
 
         /** @var array{pkey: string, cert: string} $data */
 
-        $privateKey = openssl_pkey_get_private($data['pkey'], $certificatePath->passphrase);
-
-        if ($privateKey === false) {
-            throw new RuntimeException(
-                sprintf('Unable to read the cert file. OpenSSL: %s', (openssl_error_string() ?: ''))
-            );
-        }
-
-        $raw = trim(str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $data['cert']));
-
-        /** @var array{issuer: array<string, string>, serialNumberHex: string}|false $info */
-        $info = openssl_x509_parse($data['cert']);
-
-        if ($info === false) {
-            throw new RuntimeException(
-                sprintf('Unable to read the cert file. OpenSSL: %s', (openssl_error_string() ?: ''))
-            );
-        }
-
-        return new Certificate($raw, $info, $privateKey);
+        return self::makeFromPkcs8($data['cert'], $data['pkey'], $passphrase);
     }
 }

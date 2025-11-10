@@ -31,8 +31,8 @@ uses(FeatureAbstractTestCase::class)
 
         try {
             $client->testdata()->person()->create([
-                'nip' => $_ENV['NIP'],
-                'pesel' => $_ENV['PESEL'],
+                'nip' => $_ENV['NIP_1'],
+                'pesel' => $_ENV['PESEL_1'],
                 'isBailiff' => false,
                 'description' => 'testing',
             ]);
@@ -48,7 +48,7 @@ uses(FeatureAbstractTestCase::class)
             ->build();
 
         $client->testdata()->person()->remove([
-            'nip' => $_ENV['NIP'],
+            'nip' => $_ENV['NIP_1'],
         ]);
     })
     ->in('Feature');

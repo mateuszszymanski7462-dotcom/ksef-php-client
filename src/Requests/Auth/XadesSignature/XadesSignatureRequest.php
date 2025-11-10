@@ -10,14 +10,14 @@ use N1ebieski\KSEFClient\DTOs\Requests\Auth\XadesSignature;
 use N1ebieski\KSEFClient\Requests\AbstractRequest;
 use N1ebieski\KSEFClient\Requests\Auth\XadesSignature\Concerns\HasToParameters;
 use N1ebieski\KSEFClient\Support\Optional;
-use N1ebieski\KSEFClient\ValueObjects\CertificatePath;
+use N1ebieski\KSEFClient\ValueObjects\Certificate;
 
 final class XadesSignatureRequest extends AbstractRequest implements XmlSerializableInterface, ParametersInterface
 {
     use HasToParameters;
 
     public function __construct(
-        public readonly CertificatePath $certificatePath,
+        public readonly Certificate $certificate,
         public readonly XadesSignature $xadesSignature,
         public readonly Optional | bool $verifyCertificateChain = new Optional()
     ) {

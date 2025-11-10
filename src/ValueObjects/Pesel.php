@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace N1ebieski\KSEFClient\ValueObjects\Requests\Testdata\Person\Create;
+namespace N1ebieski\KSEFClient\ValueObjects;
 
 use N1ebieski\KSEFClient\Contracts\FromInterface;
 use N1ebieski\KSEFClient\Contracts\ValueAwareInterface;
@@ -32,5 +32,10 @@ final class Pesel extends AbstractValueObject implements FromInterface, Stringab
     public static function from(string $value): self
     {
         return new self($value);
+    }
+
+    public function getType(): string
+    {
+        return 'Pesel';
     }
 }

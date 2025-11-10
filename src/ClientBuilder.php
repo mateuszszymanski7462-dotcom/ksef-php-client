@@ -18,6 +18,7 @@ use N1ebieski\KSEFClient\DTOs\Config;
 use N1ebieski\KSEFClient\DTOs\Requests\Auth\ContextIdentifierGroup;
 use N1ebieski\KSEFClient\DTOs\Requests\Auth\XadesSignature;
 use N1ebieski\KSEFClient\Exceptions\ExceptionHandler;
+use N1ebieski\KSEFClient\Factories\CertificateFactory;
 use N1ebieski\KSEFClient\Factories\ClientFactory;
 use N1ebieski\KSEFClient\Factories\EncryptedKeyFactory;
 use N1ebieski\KSEFClient\Factories\EncryptedTokenFactory;
@@ -31,6 +32,7 @@ use N1ebieski\KSEFClient\Support\Optional;
 use N1ebieski\KSEFClient\Support\Utility;
 use N1ebieski\KSEFClient\ValueObjects\AccessToken;
 use N1ebieski\KSEFClient\ValueObjects\ApiUrl;
+use N1ebieski\KSEFClient\ValueObjects\Certificate;
 use N1ebieski\KSEFClient\ValueObjects\CertificatePath;
 use N1ebieski\KSEFClient\ValueObjects\EncryptionKey;
 use N1ebieski\KSEFClient\ValueObjects\HttpClient\BaseUri;
@@ -72,7 +74,7 @@ final class ClientBuilder
 
     private ?RefreshToken $refreshToken = null;
 
-    private ?CertificatePath $certificatePath = null;
+    private ?Certificate $certificate = null;
 
     private NIP | NipVatUe | InternalId | PeppolId $identifier;
 
@@ -142,7 +144,7 @@ final class ClientBuilder
             $ksefToken = KsefToken::from($ksefToken);
         }
 
-        $this->certificatePath = null;
+        $this->certificate = null;
 
         $this->ksefToken = $ksefToken;
 
@@ -185,9 +187,24 @@ final class ClientBuilder
             $certificatePath = CertificatePath::from($certificatePath, $passphrase);
         }
 
+        $certificate = CertificateFactory::makeFromCertificatePath($certificatePath);
+
+        return $this->withCertificate($certificate);
+    }
+
+    public function withCertificate(Certificate | string $certificate, ?string $privateKey = null, ?string $passphrase = null): self
+    {
+        if ($certificate instanceof Certificate === false) {
+            if ($privateKey === null) {
+                throw new InvalidArgumentException('Private key is required when certificate is string.');
+            }
+
+            $certificate = CertificateFactory::makeFromPkcs8($certificate, $privateKey, $passphrase);
+        }
+
         $this->ksefToken = null;
 
-        $this->certificatePath = $certificatePath;
+        $this->certificate = $certificate;
 
         return $this;
     }
@@ -289,7 +306,7 @@ final class ClientBuilder
         if ($this->isAuthorisation()) {
             try {
                 $authorisationAccessResponse = match (true) {
-                    $this->certificatePath instanceof CertificatePath => $this->handleAuthorisationByCertificate($client),
+                    $this->certificate instanceof Certificate => $this->handleAuthorisationByCertificate($client),
                     $this->ksefToken instanceof KsefToken => $this->handleAuthorisationByKsefToken($client),
                 };
             } catch (Throwable $throwable) {
@@ -342,7 +359,7 @@ final class ClientBuilder
     private function isAuthorisation(): bool
     {
         return ! $this->accessToken instanceof AccessToken && (
-            $this->ksefToken instanceof KsefToken || $this->certificatePath instanceof CertificatePath
+            $this->ksefToken instanceof KsefToken || $this->certificate instanceof Certificate
         );
     }
 
@@ -375,8 +392,8 @@ final class ClientBuilder
 
     private function handleAuthorisationByCertificate(ClientResourceInterface $client): ResponseInterface
     {
-        if ( ! $this->certificatePath instanceof CertificatePath) {
-            throw new RuntimeException('Certificate path is not set');
+        if ( ! $this->certificate instanceof Certificate) {
+            throw new RuntimeException('Certificate is not set');
         }
 
         /** @var object{challenge: string, timestamp: string} $challengeResponse */
@@ -384,7 +401,7 @@ final class ClientBuilder
 
         return $client->auth()->xadesSignature(
             new XadesSignatureRequest(
-                certificatePath: $this->certificatePath,
+                certificate: $this->certificate,
                 xadesSignature: new XadesSignature(
                     challenge: Challenge::from($challengeResponse->challenge),
                     contextIdentifierGroup: ContextIdentifierGroup::fromIdentifier($this->identifier),
